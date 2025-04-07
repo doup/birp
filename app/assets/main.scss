@@ -1,0 +1,17 @@
+:root {
+  --font-sans-serif: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial,
+    sans-serif;
+}
+
+html {
+  background-color: #eee;
+  font-family: var(--font-sans-serif);
+}
+
+.entity {
+  &:hover {
+    background-color: yellow;
+    cursor: pointer;
+  }
+}
