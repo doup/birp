@@ -1,7 +1,11 @@
+@import "./sass/icon.scss";
+
 :root {
   --font-sans-serif: -apple-system, BlinkMacSystemFont, avenir next, avenir,
     segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial,
     sans-serif;
+  --font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
+    monospace;
 }
 
 html {
@@ -9,9 +13,91 @@ html {
   font-family: var(--font-sans-serif);
 }
 
-.entity {
-  &:hover {
-    background-color: yellow;
-    cursor: pointer;
+.module {
+  border: 1px solid black;
+  border-radius: 8px;
+  // padding: 4px;
+}
+
+.connection-indicator {
+  $size: 20px;
+  width: $size;
+  height: $size;
+  border-radius: $size;
+
+  &--connected {
+    background-color: green;
+  }
+
+  &--disconnected {
+    background-color: red;
+  }
+}
+
+.entity-tree {
+  --level: var(--entity-tree-level, 0);
+  --level-padding: 16px;
+  --item-height: 24px;
+
+  position: relative;
+
+  .icon {
+    flex-shrink: 0;
+    display: block;
+  }
+
+  &--children:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--level-padding) * var(--level));
+    border-left: 1px solid #ccc;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    height: var(--item-height);
+    padding-left: calc(var(--level-padding) * var(--level));
+    padding-right: 4px;
+    user-select: none;
+
+    &--active {
+      background-color: rgba(yellow, 0.5) !important;
+    }
+
+    &:hover {
+      background-color: rgba(yellow, 0.25);
+      cursor: pointer;
+    }
+  }
+
+  &__chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: var(--item-height);
+  }
+
+  &__kind {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--item-height);
+    height: var(--item-height);
+    font-size: 12px;
+  }
+
+  &__name {
+    padding-inline: 2px 4px;
+  }
+
+  &__id {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    opacity: 0.4;
   }
 }

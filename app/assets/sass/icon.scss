@@ -1,0 +1,18 @@
+.icon {
+  $height: 1.2em;
+
+  display: inline-block;
+  background-color: currentColor;
+  vertical-align: text-bottom;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  height: $height;
+  width: calc(#{$height} * var(--icon-ratio));
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+}

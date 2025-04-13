@@ -49,6 +49,7 @@ version = "0.1.0"
 dependencies = [
  "client",
  "dioxus",
+ "tokio",
 ]
 
 [[package]]
@@ -656,9 +657,11 @@ name = "client"
 version = "0.1.0"
 dependencies = [
  "bevy_remote",
+ "futures",
  "reqwest",
  "serde",
  "serde_json",
+ "thiserror 2.0.12",
 ]
 
 [[package]]
