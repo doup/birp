@@ -1,0 +1,10 @@
+pub const CAMERA: &str = "bevy_render::camera::camera::Camera";
+pub const CHILD_OF: &str = "bevy_ecs::hierarchy::ChildOf";
+pub const CHILDREN: &str = "bevy_ecs::hierarchy::Children";
+pub const LIGHT_DIRECTIONAL: &str = "bevy_pbr::light::directional_light::DirectionalLight";
+pub const LIGHT_POINT: &str = "bevy_pbr::light::point_light::PointLight";
+pub const LIGHT_SPOT: &str = "bevy_pbr::light::spot_light::SpotLight";
+pub const MESH_2D: &str = "bevy_render::mesh::components::Mesh2d";
+pub const MESH_3D: &str = "bevy_render::mesh::components::Mesh3d";
+pub const NAME: &str = "bevy_ecs::name::Name";
+pub const WINDOW: &str = "bevy_window::window::Window";

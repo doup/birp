@@ -1,9 +1,9 @@
+use bevy_remote::builtin_methods::{BrpGetResponse, BrpQueryRow};
 use futures::future::join_all;
-use serde::{Deserialize, Deserializer, de::Error};
+use serde::Deserialize;
 use serde_json::{Value, from_value, json};
 use std::{
-    collections::HashMap,
-    fmt::{self},
+    fmt,
     sync::{
         Arc,
         atomic::{AtomicU32, Ordering},
@@ -11,16 +11,13 @@ use std::{
 };
 use thiserror::Error;
 
-const COMPONENT_CAMERA: &str = "bevy_render::camera::camera::Camera";
-const COMPONENT_CHILD_OF: &str = "bevy_ecs::hierarchy::ChildOf";
-const COMPONENT_CHILDREN: &str = "bevy_ecs::hierarchy::Children";
-const COMPONENT_LIGHT_DIRECTIONAL: &str = "bevy_pbr::light::directional_light::DirectionalLight";
-const COMPONENT_LIGHT_POINT: &str = "bevy_pbr::light::point_light::PointLight";
-const COMPONENT_LIGHT_SPOT: &str = "bevy_pbr::light::spot_light::SpotLight";
-const COMPONENT_MESH_2D: &str = "bevy_render::mesh::components::Mesh2d";
-const COMPONENT_MESH_3D: &str = "bevy_render::mesh::components::Mesh3d";
-const COMPONENT_NAME: &str = "bevy_ecs::name::Name";
-const COMPONENT_WINDOW: &str = "bevy_window::window::Window";
+pub mod component;
+mod entity_item;
+mod entity_kind;
+
+pub use bevy_ecs::entity::Entity;
+pub use entity_item::EntityItem;
+pub use entity_kind::EntityKind;
 
 #[derive(Debug, Error)]
 pub enum ClientError {
@@ -50,103 +47,6 @@ pub struct BrpError {
 impl fmt::Display for BrpError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} (code={})", self.message, self.code)
-    }
-}
-
-#[derive(Debug)]
-pub enum EntityKind {
-    Camera,
-    Light,
-    Mesh2d,
-    Mesh3d,
-    Observer,
-    Unknown,
-    Window,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct HierarchyEntity {
-    #[serde(rename = "entity")]
-    pub id: u64,
-    pub components: HashMap<String, Value>,
-    pub has: Option<HashMap<String, bool>>,
-}
-
-impl HierarchyEntity {
-    pub fn children(&self) -> Vec<u64> {
-        self.get_component_as::<Vec<u64>>(COMPONENT_CHILDREN)
-            .unwrap_or_default()
-    }
-
-    pub fn get_component_as<T: serde::de::DeserializeOwned>(&self, key: &str) -> Option<T> {
-        self.components
-            .get(key)
-            .and_then(|value| serde_json::from_value(value.clone()).ok())
-    }
-
-    fn has_component(&self, component: &str) -> bool {
-        match self.has {
-            Some(ref has) => has
-                .get(component)
-                .unwrap_or(&self.components.contains_key(component))
-                .clone(),
-            None => self.components.contains_key(component),
-        }
-    }
-
-    pub fn kind(&self) -> EntityKind {
-        if self.has_component(COMPONENT_CAMERA) {
-            EntityKind::Camera
-        } else if self.has_component(COMPONENT_LIGHT_DIRECTIONAL)
-            || self.has_component(COMPONENT_LIGHT_POINT)
-            || self.has_component(COMPONENT_LIGHT_SPOT)
-        {
-            EntityKind::Light
-        } else if self.has_component(COMPONENT_MESH_2D) {
-            EntityKind::Mesh2d
-        } else if self.has_component(COMPONENT_MESH_3D) {
-            EntityKind::Mesh3d
-        } else if self.has_component(COMPONENT_WINDOW) {
-            EntityKind::Window
-        } else if self.has_component("bevy_ecs::observer::ObserverState") {
-            EntityKind::Observer
-        } else {
-            EntityKind::Unknown
-        }
-    }
-
-    pub fn name(&self) -> String {
-        self.get_component_as::<String>(COMPONENT_NAME)
-            .unwrap_or_default()
-    }
-}
-
-#[derive(Debug)]
-pub struct HierarchyParentEntity {
-    pub children: Vec<u64>,
-}
-
-impl<'de> Deserialize<'de> for HierarchyParentEntity {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        #[derive(Deserialize)]
-        struct TempEntity {
-            components: HashMap<String, Value>,
-        }
-
-        let mut temp = TempEntity::deserialize(deserializer)?;
-        let mut children = Vec::new();
-
-        // Extract list of children from components
-        if let Some(value) = temp.components.remove(COMPONENT_CHILDREN) {
-            if let Ok(extracted_children) = serde_json::from_value::<Vec<u64>>(value) {
-                children = extracted_children;
-            }
-        }
-
-        Ok(HierarchyParentEntity { children })
     }
 }
 
@@ -199,10 +99,38 @@ impl BrpClient {
         }
     }
 
+    pub async fn get(&self, id: Entity) -> Result<EntityItem, ClientError> {
+        // TODO: First call `bevy/list`, then `bevy/get` with the list of the entity components
+
+        let entity = self
+            .call(
+                "bevy/get",
+                json!({
+                    "entity": id,
+                    "components": [
+                        component::NAME,
+                        component::CHILDREN,
+                        component::CHILD_OF,
+                        // Components to find-out the "kind"
+                        component::CAMERA,
+                        component::LIGHT_DIRECTIONAL,
+                        component::LIGHT_POINT,
+                        component::LIGHT_SPOT,
+                        component::MESH_2D,
+                        component::MESH_3D,
+                        component::WINDOW,
+                    ]
+                }),
+            )
+            .await?;
+
+        Ok((id, from_value::<BrpGetResponse>(entity)?).into())
+    }
+
     pub async fn get_children(
         &self,
-        parent_id: Option<u64>,
-    ) -> Result<Vec<HierarchyEntity>, ClientError> {
+        parent_id: Option<Entity>,
+    ) -> Result<Vec<EntityItem>, ClientError> {
         match parent_id {
             Some(id) => {
                 // Get the parent entity so we can get its children IDs
@@ -211,61 +139,39 @@ impl BrpClient {
                         "bevy/get",
                         json!({
                             "entity": id,
-                            "components": [COMPONENT_CHILDREN]
+                            "components": [component::CHILDREN]
                         }),
                     )
                     .await?;
 
-                let parent = from_value::<HierarchyParentEntity>(parent)?;
+                let parent: EntityItem = (id, from_value::<BrpGetResponse>(parent)?).into();
 
                 // Fetch all the children
-                let futures = parent.children.into_iter().map(
-                    async |id| -> Result<HierarchyEntity, ClientError> {
+                let futures = parent.children().into_iter().map(
+                    async |id| -> Result<EntityItem, ClientError> {
                         let entity = self
                             .call(
                                 "bevy/get",
                                 json!({
                                     "entity": id,
                                     "components": [
-                                        COMPONENT_NAME,
-                                        COMPONENT_CHILDREN,
-                                        COMPONENT_CHILD_OF,
+                                        component::NAME,
+                                        component::CHILDREN,
+                                        component::CHILD_OF,
                                         // Components to find-out the "kind"
-                                        COMPONENT_CAMERA,
-                                        COMPONENT_LIGHT_DIRECTIONAL,
-                                        COMPONENT_LIGHT_POINT,
-                                        COMPONENT_LIGHT_SPOT,
-                                        COMPONENT_MESH_2D,
-                                        COMPONENT_MESH_3D,
-                                        COMPONENT_WINDOW,
+                                        component::CAMERA,
+                                        component::LIGHT_DIRECTIONAL,
+                                        component::LIGHT_POINT,
+                                        component::LIGHT_SPOT,
+                                        component::MESH_2D,
+                                        component::MESH_3D,
+                                        component::WINDOW,
                                     ]
                                 }),
                             )
                             .await?;
 
-                        let components = entity
-                            .get("components")
-                            .and_then(|v| v.as_object())
-                            .map(|map| map.clone().into_iter().collect())
-                            .ok_or(ClientError::ParseError(serde_json::Error::custom(
-                                "failed to parse 'components' property",
-                            )))?;
-
-                        let has_map = entity.get("has").and_then(|v| v.as_object());
-                        let has = match has_map {
-                            Some(map) => Some(
-                                map.iter()
-                                    .map(|(k, v)| (k.clone(), v.as_bool().unwrap_or(false)))
-                                    .collect::<HashMap<String, bool>>(),
-                            ),
-                            None => None,
-                        };
-
-                        Ok(HierarchyEntity {
-                            id,
-                            components,
-                            has,
-                        })
+                        Ok((id, from_value::<BrpGetResponse>(entity)?).into())
                     },
                 );
 
@@ -273,8 +179,7 @@ impl BrpClient {
                 let results = join_all(futures).await;
 
                 // Collect the results into a single `Result`
-                let entities: Result<Vec<HierarchyEntity>, ClientError> =
-                    results.into_iter().collect();
+                let entities: Result<Vec<EntityItem>, ClientError> = results.into_iter().collect();
 
                 entities
             }
@@ -285,30 +190,30 @@ impl BrpClient {
                         json!({
                             "data": {
                                 "option": [
-                                    COMPONENT_NAME,
-                                    COMPONENT_CHILDREN,
-                                    COMPONENT_CHILD_OF,
+                                    component::NAME,
+                                    component::CHILDREN,
+                                    component::CHILD_OF,
                                 ],
                                 "has": [
-                                    COMPONENT_CAMERA,
-                                    COMPONENT_LIGHT_DIRECTIONAL,
-                                    COMPONENT_LIGHT_POINT,
-                                    COMPONENT_LIGHT_SPOT,
-                                    COMPONENT_MESH_2D,
-                                    COMPONENT_MESH_3D,
-                                    COMPONENT_WINDOW,
+                                    component::CAMERA,
+                                    component::LIGHT_DIRECTIONAL,
+                                    component::LIGHT_POINT,
+                                    component::LIGHT_SPOT,
+                                    component::MESH_2D,
+                                    component::MESH_3D,
+                                    component::WINDOW,
                                 ]
                             },
                             "filter": {
-                                "without": [COMPONENT_CHILD_OF]
+                                "without": [component::CHILD_OF]
                             },
                         }),
                     )
                     .await?;
 
-                let res = from_value::<Vec<HierarchyEntity>>(res)?;
+                let res = from_value::<Vec<BrpQueryRow>>(res)?;
 
-                Ok(res)
+                Ok(res.into_iter().map(Into::into).collect())
             }
         }
     }
