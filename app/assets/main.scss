@@ -1,4 +1,6 @@
-@import "./sass/icon.scss";
+* {
+  box-sizing: border-box;
+}
 
 :root {
   --font-sans-serif: -apple-system, BlinkMacSystemFont, avenir next, avenir,
@@ -8,42 +10,136 @@
     monospace;
 }
 
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
 html {
   background-color: #eee;
   font-family: var(--font-sans-serif);
 }
 
-.module {
-  border: 1px solid black;
-  border-radius: 8px;
-  // padding: 4px;
+#main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
-.connection-indicator {
-  $size: 20px;
-  width: $size;
-  height: $size;
-  border-radius: $size;
+.card {
+  border: 1px solid black;
+  border-radius: 8px;
+}
 
-  &--connected {
-    background-color: green;
+.button {
+  border-radius: 4px;
+}
+
+.connection {
+  $height: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &__refresh {
+    flex-shrink: 0;
+    width: $height;
+    height: $height;
+    font-size: 16px;
   }
 
-  &--disconnected {
-    background-color: red;
+  &__status {
+    width: 8px;
+    height: $height;
+    border-radius: 2px;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+    margin-right: -4px;
+
+    &--connected {
+      background-color: #8cda0f;
+      border-color: #70af0b;
+    }
+
+    &--disconnected {
+      background-color: #ff0077;
+      border-color: #c00b5f;
+    }
+  }
+
+  &__url {
+    flex-grow: 1;
+    height: 40px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  &__polling {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+  }
+}
+
+.polling {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &__label {
+    flex-shrink: 0;
+    text-wrap: nowrap;
+  }
+
+  &__range {
+    max-width: 50px;
+  }
+
+  &__value {
+    font-size: 12px;
+    width: 50px;
+  }
+}
+
+.entities {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 4px;
+  padding: 4px;
+
+  &__hierarchy {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  &__details {
+    width: 100%;
+    column-count: auto;
+    column-width: 250px;
+    column-gap: 4px;
+    // display: flex;
+    // flex-direction: column;
+    // flex-wrap: wrap;
+    // gap: 4px;
+    // column-count: 4;
+    // column-gap: 4px;
   }
 }
 
 .entity-tree {
   --level: var(--entity-tree-level, 0);
-  --level-padding: 16px;
+  --level-padding: 12px;
   --item-height: 24px;
 
   position: relative;
+  height: 100%;
 
-  .icon {
-    flex-shrink: 0;
-    display: block;
+  &--root {
+    overflow-y: auto;
   }
 
   &--children:before {
@@ -67,6 +163,10 @@ html {
       background-color: rgba(yellow, 0.5) !important;
     }
 
+    &--pinned {
+      background-color: rgba(#000, 0.05);
+    }
+
     &:hover {
       background-color: rgba(yellow, 0.25);
       cursor: pointer;
@@ -78,6 +178,7 @@ html {
     align-items: center;
     justify-content: center;
     width: 16px;
+    padding-left: 2px;
     height: var(--item-height);
   }
 
@@ -87,17 +188,62 @@ html {
     justify-content: center;
     width: var(--item-height);
     height: var(--item-height);
-    font-size: 12px;
+    font-size: 13px;
   }
 
   &__name {
     padding-inline: 2px 4px;
+    font-size: 12px;
   }
 
   &__id {
     margin-left: auto;
     font-family: var(--font-mono);
-    font-size: 0.7em;
+    font-size: 0.65em;
     opacity: 0.4;
+  }
+}
+
+.icon {
+  $height: 1.2em;
+
+  display: inline-block;
+  background-color: currentColor;
+  vertical-align: text-bottom;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  flex-shrink: 0;
+  height: $height;
+  width: calc(#{$height} * var(--icon-ratio));
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-block: 8px;
+
+  &__item {
+    border: 1px solid black;
+    padding: 2px 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+.entity-inspector {
+  padding: 8px;
+  border-radius: 4px;
+  break-inside: avoid;
+  margin-bottom: 4px;
+
+  &--active {
+    background-color: rgba(#000, 0.05);
   }
 }

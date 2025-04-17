@@ -1,9 +1,10 @@
+use client::Entity;
 use dioxus::prelude::*;
 
 #[derive(Clone, Copy)]
 pub struct InspectorState {
-    pub active: Signal<Option<u64>>,
-    pub pinned: Signal<Vec<u64>>,
+    pub active: Signal<Option<Entity>>,
+    pub pinned: Signal<Vec<Entity>>,
 }
 
 impl InspectorState {

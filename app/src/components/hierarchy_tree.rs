@@ -1,4 +1,4 @@
-use client::HierarchyEntity;
+use client::{Entity, EntityItem, EntityKind};
 use dioxus::{logger::tracing::info, prelude::*};
 use std::collections::BTreeMap;
 
@@ -8,13 +8,14 @@ use crate::{
 };
 
 struct HierarchyItem {
-    entity: HierarchyEntity,
+    entity: EntityItem,
     expanded: bool,
 }
 
 #[component]
-pub fn HierarchyTree(parent_id: Option<u64>, level: u32) -> Element {
+pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
     let mut active_entity = use_context::<InspectorState>().active;
+    let pinned_entities = use_context::<InspectorState>().pinned;
     let client = use_context::<ConnectionState>().client;
     let is_connected = use_context::<ConnectionState>().is_connected;
     let is_children = level > 0;
@@ -29,13 +30,13 @@ pub fn HierarchyTree(parent_id: Option<u64>, level: u32) -> Element {
         if is_children {
             "entity-tree--children"
         } else {
-            ""
+            "entity-tree--root"
         }
     );
 
-    let mut items: Signal<BTreeMap<u64, HierarchyItem>> = use_signal(BTreeMap::new);
+    let mut items: Signal<BTreeMap<Entity, HierarchyItem>> = use_signal(BTreeMap::new);
 
-    let row_click = |id: u64| {
+    let row_click = |id: Entity| {
         move |_: Event<MouseData>| {
             active_entity.set(Some(id));
 
@@ -88,7 +89,12 @@ pub fn HierarchyTree(parent_id: Option<u64>, level: u32) -> Element {
                 div {
                     key: "{entity_id}",
                     class: format!(
-                        "entity-tree__item {}",
+                        "entity-tree__item {} {}",
+                        if pinned_entities().contains(entity_id) {
+                            "entity-tree__item--pinned"
+                        } else {
+                            ""
+                        },
                         if active_entity() == Some(*entity_id) {
                             "entity-tree__item--active"
                         } else {
@@ -108,8 +114,10 @@ pub fn HierarchyTree(parent_id: Option<u64>, level: u32) -> Element {
                             ""
                         }
                     }
-                    div { class: "entity-tree__kind", {Icon::from(item.entity.kind()).render()} }
-                    div { class: "entity-tree__name", "{item.entity.name()}" }
+                    div { class: "entity-tree__kind", {Icon::from(&item.entity).render()} }
+                    div { class: "entity-tree__name",
+                        {format!("{}", item.entity.name().unwrap_or_default())}
+                    }
                     span { class: "entity-tree__id", "{item.entity.id}" }
                 }
 

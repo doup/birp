@@ -1,7 +1,7 @@
 use dioxus::desktop::{Config, WindowBuilder};
 use dioxus::prelude::*;
 
-use components::{Connection, HierarchyTree};
+use components::{Connection, EntitiesTool};
 use states::{ConnectionState, InspectorState};
 
 mod components;
@@ -19,24 +19,43 @@ fn main() {
         .launch(App)
 }
 
+enum Tool {
+    Entities,
+    Resources,
+}
+
 #[component]
 fn App() -> Element {
     use_context_provider(|| ConnectionState::new("http://127.0.0.1:15702"));
     use_context_provider(|| InspectorState::new());
-
-    let active_entity = use_context::<InspectorState>().active;
+    let mut tool = use_signal(|| Tool::Entities);
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/main.scss") }
         Connection {}
-        div {
-            hr {}
 
-            div { class: "module",
-                HierarchyTree { level: 0, parent_id: None }
+        div { class: "tabs",
+            div {
+                class: "tabs__item",
+                onclick: move |_| tool.set(Tool::Entities),
+                "Entities"
             }
+            div {
+                class: "tabs__item",
+                onclick: move |_| tool.set(Tool::Resources),
+                "Resources"
+            }
+        }
 
-            {format!("{:?}", active_entity())}
+        {
+            match *tool.read() {
+                Tool::Entities => rsx! {
+                    EntitiesTool {}
+                },
+                Tool::Resources => rsx! {
+                    div { "Resources" }
+                },
+            }
         }
     }
 }

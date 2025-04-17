@@ -1,7 +1,7 @@
-use dioxus::{logger::tracing::info, prelude::*};
+use dioxus::{html::div, logger::tracing::info, prelude::*};
 use std::time::Duration;
 
-use crate::states::ConnectionState;
+use crate::{components::Icon, states::ConnectionState};
 
 #[component]
 pub fn Connection() -> Element {
@@ -11,13 +11,13 @@ pub fn Connection() -> Element {
     let mut update_signal = use_context::<ConnectionState>().update_signal;
     let mut url = use_context::<ConnectionState>().url;
     let client = use_context::<ConnectionState>().client;
-    let connection_indicator_class = use_memo(move || {
+    let connection_status_class = use_memo(move || {
         format!(
-            "connection-indicator {}",
+            "connection__status {}",
             if is_connected() {
-                "connection-indicator--connected"
+                "connection__status--connected"
             } else {
-                "connection-indicator--disconnected"
+                "connection__status--disconnected"
             }
         )
     });
@@ -46,43 +46,51 @@ pub fn Connection() -> Element {
     });
 
     rsx! {
-        div {
-            div { class: connection_indicator_class() }
+        div { class: "connection",
+            button {
+                class: "button connection__refresh",
+                onclick: move |_| { update_signal.set(()) },
+                {Icon::Refresh.render()}
+            }
+
+            div { class: connection_status_class() }
             input {
+                class: "connection__url",
                 value: url(),
                 oninput: move |e| {
                     let new_url = e.data.value();
                     url.set(new_url);
                 },
             }
-        }
-        input {
-            id: "auto-poll",
-            r#type: "checkbox",
-            checked: automatic_poll(),
-            onchange: move |e| {
-                automatic_poll.set(e.data.checked());
-            },
-        }
-        label { r#for: "auto-poll", "Automatic Poll" }
-        div {
-            "Poll Interval:"
-            input {
-                r#type: "range",
-                value: "2",
-                min: "0",
-                max: "4",
-                oninput: move |e| {
-                    let slider_value = e.data.value().parse::<u32>().unwrap_or(0);
-                    let ms = 125 * 2u64.pow(slider_value);
-                    poll_interval.set(ms);
-                },
-                onchange: move |e| {
-                    info!("final slider value: {}", e.data.value());
-                },
+
+            div { class: "connection__polling polling",
+                input {
+                    class: "polling__checkbox",
+                    id: "auto-poll",
+                    r#type: "checkbox",
+                    checked: automatic_poll(),
+                    onchange: move |e| {
+                        automatic_poll.set(e.data.checked());
+                    },
+                }
+                label { class: "polling__label", r#for: "auto-poll", "Auto Refresh" }
+                input {
+                    class: "polling__range",
+                    r#type: "range",
+                    value: "2",
+                    min: "0",
+                    max: "4",
+                    oninput: move |e| {
+                        let slider_value = e.data.value().parse::<u32>().unwrap_or(0);
+                        let ms = 125 * 2u64.pow(slider_value);
+                        poll_interval.set(ms);
+                    },
+                    onchange: move |e| {
+                        info!("final slider value: {}", e.data.value());
+                    },
+                }
+                span { class: "polling__value", "{poll_interval()}ms" }
             }
-            "{poll_interval()}ms"
         }
-        button { onclick: move |_| { update_signal.set(()) }, "Refresh" }
     }
 }

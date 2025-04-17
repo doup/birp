@@ -7,6 +7,7 @@ pub struct ConnectionState {
     pub client: Memo<BrpClient>,
     pub is_connected: Signal<bool>,
     pub poll_interval: Signal<u64>,
+    /// Signal to notify components to update
     pub update_signal: Signal<()>,
     pub url: Signal<String>,
 }

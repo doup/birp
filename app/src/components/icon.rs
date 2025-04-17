@@ -1,4 +1,4 @@
-use client::EntityKind;
+use client::{EntityItem, EntityKind};
 use dioxus::prelude::*;
 
 pub enum Icon {
@@ -8,6 +8,7 @@ pub enum Icon {
     ChevronRight,
     Cursor,
     Lightbulb,
+    Refresh,
     Video,
     Window,
 }
@@ -21,6 +22,7 @@ impl Icon {
             Icon::ChevronRight => ("arrow-right-s-line", 1.0),
             Icon::Cursor => ("cursor-line", 1.0),
             Icon::Lightbulb => ("lightbulb-line", 1.0),
+            Icon::Refresh => ("refresh-right-fill", 1.0),
             Icon::Video => ("video-on-line", 1.0),
             Icon::Window => ("window-line", 1.0),
         };
@@ -43,5 +45,11 @@ impl From<EntityKind> for Icon {
             EntityKind::Window => Icon::Window,
             _ => Icon::Bubbles,
         }
+    }
+}
+
+impl From<&EntityItem> for Icon {
+    fn from(entity: &EntityItem) -> Self {
+        EntityKind::from(entity).into()
     }
 }
