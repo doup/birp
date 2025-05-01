@@ -8,3 +8,4 @@ publish = false
 client = { path = "../client" }
 dioxus = { version = "0.6", features = ["desktop"] }
 tokio = "1.44"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

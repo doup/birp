@@ -1,5 +1,6 @@
 use dioxus::desktop::{Config, WindowBuilder};
 use dioxus::prelude::*;
+use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
 
 use components::{Connection, EntitiesTool};
 use states::{ConnectionState, EntitiesToolState};
@@ -8,6 +9,16 @@ mod components;
 mod states;
 
 fn main() {
+    // Initialize tracing with filter
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::fmt::layer())
+        .with(
+            EnvFilter::builder()
+                .parse("warn,bevy_remote=error,client=debug,app=debug")
+                .unwrap(),
+        )
+        .init();
+
     dioxus::LaunchBuilder::desktop()
         .with_cfg(
             Config::new().with_window(
