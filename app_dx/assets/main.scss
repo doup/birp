@@ -1,12 +1,35 @@
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-weight: 100 900;
+  font-style: normal;
+  src: local("Firava"),
+    url("/assets/fonts/firava-sans.woff2") format("woff2 supports variations"),
+    url("/assets/fonts/firava-sans.woff2") format("woff2-variations"),
+    url("/assets/fonts/firava-sans.ttf") format("truetype-variation");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-weight: 100 900;
+  font-style: italic;
+  src: local("Firava Italic"),
+    url("/assets/fonts/firava-sans-italic.woff2")
+      format("woff2 supports variations"),
+    url("/assets/fonts/firava-sans-italic.woff2") format("woff2-variations"),
+    url("/assets/fonts/firava-sans-italic.ttf") format("truetype-variation");
+}
+
 * {
   box-sizing: border-box;
   user-select: none;
 }
 
 :root {
-  --font-sans-serif: -apple-system, BlinkMacSystemFont, avenir next, avenir,
-    segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial,
-    sans-serif;
+  --font-sans-serif: "Fira Sans", -apple-system, BlinkMacSystemFont, avenir next,
+    avenir, segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica,
+    arial, sans-serif;
   --font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
     monospace;
 }
