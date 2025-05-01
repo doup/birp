@@ -1,3 +1,16 @@
+// Input Range
+@use "input-range" with (
+  $track-color: #2a2a2a,
+  $track-height: 6px,
+  $track-border-width: 1px,
+  $track-border-color: #494949,
+  $thumb-color: #666666,
+  $thumb-width: 16px,
+  $thumb-height: 16px,
+  $thumb-border-width: 1px,
+  $thumb-border-color: #808080
+);
+
 @font-face {
   font-family: "Fira Sans";
   font-display: swap;
@@ -32,6 +45,23 @@
     arial, sans-serif;
   --font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
     monospace;
+
+  --color-neutral-09: #171717;
+  --color-neutral-12: #1f1f1f;
+  --color-neutral-16: #2a2a2a;
+  --color-neutral-20: #343434;
+  --color-neutral-22: #393939;
+  --color-neutral-24: #3c3c3c;
+  --color-neutral-25: #404040;
+  --color-neutral-29: #494949;
+  --color-neutral-30: #4d4d4d;
+  --color-neutral-40: #666666;
+  --color-neutral-45: #737373;
+  --color-neutral-50: #808080;
+  --color-neutral-60: #999999;
+  --color-neutral-70: #b3b3b3;
+  --color-neutral-80: #cccccc;
+  --color-neutral-90: #e6e6e6;
 }
 
 // Scrollbar styles
@@ -47,13 +77,15 @@
   border: 2px solid #fff;
 }
 
+// HTML and Body
 html,
 body {
   margin: 0;
+  color: var(--color-neutral-90);
 }
 
 html {
-  background-color: #eee;
+  background-color: var(--color-neutral-09);
   font-family: var(--font-sans-serif);
 }
 
@@ -66,6 +98,8 @@ html {
 
   &__header {
     flex-shrink: 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--color-neutral-16);
   }
 
   &__content {
@@ -76,12 +110,16 @@ html {
 }
 
 .card {
+  background-color: var(--color-neutral-16);
   border: 1px solid black;
   border-radius: 4px;
 }
 
 .button {
-  border-radius: 4px;
+  background-color: var(--color-neutral-22);
+  border: 1px solid var(--color-neutral-29);
+  border-radius: 6px;
+  color: var(--color-neutral-90);
 }
 
 .connection {
@@ -89,7 +127,8 @@ html {
 
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  padding: 4px;
 
   &__refresh {
     flex-shrink: 0;
@@ -101,19 +140,23 @@ html {
   &__status {
     width: 8px;
     height: $height;
-    border-radius: 2px;
+    border-radius: 6px 0px 0px 6px;
     flex-shrink: 0;
     border: 1px solid transparent;
-    margin-right: -4px;
+    margin-right: -8px;
+    box-shadow: 0px 0px 16px var(--connection-status-color);
+    background-color: var(--connection-status-color);
+    border-color: var(--connection-status-border-color);
+    z-index: 1;
 
     &--connected {
-      background-color: #8cda0f;
-      border-color: #70af0b;
+      --connection-status-color: #8cda0f;
+      --connection-status-border-color: #598612;
     }
 
     &--disconnected {
-      background-color: #ff0077;
-      border-color: #c00b5f;
+      --connection-status-color: #ff0077;
+      --connection-status-border-color: #90124d;
     }
   }
 
@@ -122,12 +165,23 @@ html {
     height: 40px;
     font-size: 16px;
     width: 100%;
+    border: 0;
+    border-radius: 0px 6px 6px 0px;
+    background-color: var(--color-neutral-22);
+    border-color: var(--color-neutral-29);
+    border-style: solid;
+    border-width: 1px 1px 1px 0px;
+    padding-left: 8px;
+    color: var(--color-neutral-90);
+
+    &:focus {
+      outline: none;
+    }
   }
 
   &__polling {
     display: flex;
     align-items: center;
-    margin-left: 8px;
   }
 }
 
@@ -135,19 +189,26 @@ html {
   display: flex;
   align-items: center;
   gap: 4px;
+  opacity: 0.75;
+
+  &--auto {
+    opacity: 1;
+  }
 
   &__label {
     flex-shrink: 0;
     text-wrap: nowrap;
+    font-size: 14px;
   }
 
   &__range {
-    max-width: 50px;
+    width: 50px;
   }
 
   &__value {
     font-size: 12px;
-    width: 50px;
+    width: 45px;
+    text-align: center;
   }
 }
 
@@ -284,12 +345,38 @@ html {
 .tabs {
   display: flex;
   gap: 4px;
-  margin-block: 8px;
+  padding-top: 4px;
+  padding-inline: 4px;
+  border-top: 1px solid var(--color-neutral-16);
 
   &__item {
-    border: 1px solid black;
-    padding: 2px 4px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    border-radius: 4px;
+    border: 1px solid var(--color-neutral-20);
+    padding: 2px 12px;
+
+    color: var(--color-neutral-70);
+    font-size: 14px;
+    font-weight: medium;
     cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-neutral-16);
+    }
+
+    &--active {
+      color: var(--color-neutral-90);
+      background-color: var(--color-neutral-20) !important;
+    }
+
+    .icon {
+      font-size: 0.9em;
+      margin-left: -2px;
+    }
   }
 }
 

@@ -1,7 +1,10 @@
 use dioxus::{html::div, logger::tracing::info, prelude::*};
 use std::time::Duration;
 
-use crate::{components::Icon, states::ConnectionState};
+use crate::{
+    components::{Icon, connection},
+    states::ConnectionState,
+};
 
 #[component]
 pub fn Connection() -> Element {
@@ -19,6 +22,16 @@ pub fn Connection() -> Element {
                 "connection__status--connected"
             } else {
                 "connection__status--disconnected"
+            }
+        )
+    });
+    let connection_polling_class = use_memo(move || {
+        format!(
+            "connection__polling polling {}",
+            if automatic_poll() {
+                "polling--auto"
+            } else {
+                ""
             }
         )
     });
@@ -75,7 +88,7 @@ pub fn Connection() -> Element {
                 oninput: move |e| url.set(e.data.value()),
             }
 
-            div { class: "connection__polling polling",
+            div { class: connection_polling_class(),
                 input {
                     class: "polling__checkbox",
                     id: "auto-poll",
