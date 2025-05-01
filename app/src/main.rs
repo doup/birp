@@ -2,7 +2,7 @@ use dioxus::desktop::{Config, WindowBuilder};
 use dioxus::prelude::*;
 use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
 
-use components::{Connection, EntitiesTool, TypesTool};
+use components::{Connection, EntitiesTool, ResourcesTool, TypesTool};
 use states::{ConnectionState, EntitiesToolState, TypesToolState};
 
 mod components;

@@ -215,6 +215,12 @@ impl BrpClient {
         Ok(schema)
     }
 
+    pub async fn list_resources(&self) -> Result<Vec<String>, ClientError> {
+        let res = self.call("bevy/list_resources", None).await?;
+        let resources = from_value::<Vec<String>>(res)?;
+        Ok(resources)
+    }
+
     pub async fn ping(&self) -> Result<(), ClientError> {
         self.call("rpc.discover", None).await?;
         Ok(())

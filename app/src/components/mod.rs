@@ -4,6 +4,7 @@ mod entity_inspector;
 mod hierarchy_tree;
 mod icon;
 mod json_value;
+mod resources_tool;
 mod types_tool;
 
 pub use connection::*;
@@ -12,4 +13,5 @@ pub use entity_inspector::*;
 pub use hierarchy_tree::*;
 pub use icon::*;
 pub use json_value::*;
+pub use resources_tool::*;
 pub use types_tool::*;
