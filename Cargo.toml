@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["app", "client"]
+members = ["app_dx", "client"]
 
 [profile]
 
