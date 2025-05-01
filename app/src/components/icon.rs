@@ -76,7 +76,7 @@ impl From<EntityKind> for Icon {
             EntityKind::Light => Icon::Lightbulb,
             EntityKind::Mesh3d => Icon::Box,
             EntityKind::Window => Icon::Window,
-            _ => Icon::Bubbles,
+            _ => Icon::Diamond,
         }
     }
 }
