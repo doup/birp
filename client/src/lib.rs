@@ -77,7 +77,7 @@ impl BrpClient {
         self.call_id.fetch_add(1, Ordering::SeqCst)
     }
 
-    async fn call(&self, method: &str, params: Value) -> Result<Value, ClientError> {
+    async fn call(&self, method: &str, params: Option<Value>) -> Result<Value, ClientError> {
         let call_id = self.next_call_id();
         let res = self
             .client
@@ -105,7 +105,7 @@ impl BrpClient {
         let entity = self
             .call(
                 "bevy/get",
-                json!({
+                Some(json!({
                     "entity": id,
                     "components": [
                         component::NAME,
@@ -120,7 +120,7 @@ impl BrpClient {
                         component::MESH_3D,
                         component::WINDOW,
                     ]
-                }),
+                })),
             )
             .await?;
 
@@ -137,10 +137,10 @@ impl BrpClient {
                 let parent = self
                     .call(
                         "bevy/get",
-                        json!({
+                        Some(json!({
                             "entity": id,
                             "components": [component::CHILDREN]
-                        }),
+                        })),
                     )
                     .await?;
 
@@ -152,7 +152,7 @@ impl BrpClient {
                         let entity = self
                             .call(
                                 "bevy/get",
-                                json!({
+                                Some(json!({
                                     "entity": id,
                                     "components": [
                                         component::NAME,
@@ -167,7 +167,7 @@ impl BrpClient {
                                         component::MESH_3D,
                                         component::WINDOW,
                                     ]
-                                }),
+                                })),
                             )
                             .await?;
 
@@ -187,7 +187,7 @@ impl BrpClient {
                 let res = self
                     .call(
                         "bevy/query",
-                        json!({
+                        Some(json!({
                             "data": {
                                 "option": [
                                     component::NAME,
@@ -207,7 +207,7 @@ impl BrpClient {
                             "filter": {
                                 "without": [component::CHILD_OF]
                             },
-                        }),
+                        })),
                     )
                     .await?;
 
@@ -219,7 +219,7 @@ impl BrpClient {
     }
 
     pub async fn ping(&self) -> Result<(), ClientError> {
-        self.call("rpc.discover", json!({})).await?;
+        self.call("rpc.discover", None).await?;
         Ok(())
     }
 }
