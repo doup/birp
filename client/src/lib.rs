@@ -2,8 +2,9 @@ use bevy_remote::builtin_methods::{BrpGetResponse, BrpQueryRow};
 use entity_kind::KIND_COMPONENTS;
 use futures::future::join_all;
 use serde::Deserialize;
-use serde_json::{Value, from_value, json};
+use serde_json::{from_value, json};
 use std::{
+    collections::BTreeMap,
     fmt,
     sync::{
         Arc,
@@ -18,6 +19,7 @@ mod entity_kind;
 
 // (Re)Exports
 pub use bevy_ecs::entity::Entity;
+pub use bevy_remote::schemas::json_schema::{JsonSchemaBevyType, SchemaKind, SchemaType};
 pub use entity_item::EntityItem;
 pub use entity_kind::EntityKind;
 pub use serde_json::Value;
@@ -201,6 +203,16 @@ impl BrpClient {
                 Ok(res.into_iter().map(Into::into).collect())
             }
         }
+    }
+
+    pub async fn get_schema(&self) -> Result<BTreeMap<String, JsonSchemaBevyType>, ClientError> {
+        let res = self.call("bevy/registry/schema", None).await?;
+        let schema = from_value::<BTreeMap<String, JsonSchemaBevyType>>(res)?;
+
+        let resources = self.list_resources().await?;
+        println!("Resources: {:?}", resources);
+
+        Ok(schema)
     }
 
     pub async fn ping(&self) -> Result<(), ClientError> {
