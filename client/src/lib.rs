@@ -100,26 +100,16 @@ impl BrpClient {
     }
 
     pub async fn get(&self, id: Entity) -> Result<EntityItem, ClientError> {
-        // TODO: First call `bevy/list`, then `bevy/get` with the list of the entity components
+        let components = self
+            .call("bevy/list", Some(json!({ "entity": id })))
+            .await?;
 
         let entity = self
             .call(
                 "bevy/get",
                 Some(json!({
                     "entity": id,
-                    "components": [
-                        component::NAME,
-                        component::CHILDREN,
-                        component::CHILD_OF,
-                        // Components to find-out the "kind"
-                        component::CAMERA,
-                        component::LIGHT_DIRECTIONAL,
-                        component::LIGHT_POINT,
-                        component::LIGHT_SPOT,
-                        component::MESH_2D,
-                        component::MESH_3D,
-                        component::WINDOW,
-                    ]
+                    "components": components
                 })),
             )
             .await?;
