@@ -1,5 +1,19 @@
 use crate::{EntityItem, component};
 
+/// Components to guess the entity "kind"
+pub const KIND_COMPONENTS: [&'static str; 11] = [
+    component::CAMERA,
+    component::LIGHT_DIRECTIONAL,
+    component::LIGHT_POINT,
+    component::LIGHT_SPOT,
+    component::MESH_2D,
+    component::MESH_3D,
+    component::WINDOW,
+    // TODO(bevy_remote): See: https://github.com/bevyengine/bevy/issues/18869
+    // component::OBSERVER_STATE,
+    // component::SYSTEM_ID_MARKER,
+];
+
 #[derive(Debug)]
 pub enum EntityKind {
     Camera,

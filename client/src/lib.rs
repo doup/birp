@@ -1,4 +1,5 @@
 use bevy_remote::builtin_methods::{BrpGetResponse, BrpQueryRow};
+use entity_kind::KIND_COMPONENTS;
 use futures::future::join_all;
 use serde::Deserialize;
 use serde_json::{Value, from_value, json};
@@ -137,6 +138,12 @@ impl BrpClient {
                 let parent: EntityItem = (id, from_value::<BrpGetResponse>(parent)?).into();
 
                 // Fetch all the children
+                let components = {
+                    let mut components =
+                        vec![component::NAME, component::CHILDREN, component::CHILD_OF];
+                    components.extend_from_slice(&KIND_COMPONENTS);
+                    components
+                };
                 let futures = parent.children().into_iter().map(
                     async |id| -> Result<EntityItem, ClientError> {
                         let entity = self
@@ -144,19 +151,7 @@ impl BrpClient {
                                 "bevy/get",
                                 Some(json!({
                                     "entity": id,
-                                    "components": [
-                                        component::NAME,
-                                        component::CHILDREN,
-                                        component::CHILD_OF,
-                                        // Components to find-out the "kind"
-                                        component::CAMERA,
-                                        component::LIGHT_DIRECTIONAL,
-                                        component::LIGHT_POINT,
-                                        component::LIGHT_SPOT,
-                                        component::MESH_2D,
-                                        component::MESH_3D,
-                                        component::WINDOW,
-                                    ]
+                                    "components": components
                                 })),
                             )
                             .await?;
@@ -184,15 +179,7 @@ impl BrpClient {
                                     component::CHILDREN,
                                     component::CHILD_OF,
                                 ],
-                                "has": [
-                                    component::CAMERA,
-                                    component::LIGHT_DIRECTIONAL,
-                                    component::LIGHT_POINT,
-                                    component::LIGHT_SPOT,
-                                    component::MESH_2D,
-                                    component::MESH_3D,
-                                    component::WINDOW,
-                                ]
+                                "has": KIND_COMPONENTS,
                             },
                             "filter": {
                                 "without": [component::CHILD_OF]
