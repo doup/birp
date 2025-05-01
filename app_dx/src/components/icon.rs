@@ -2,6 +2,7 @@ use client::{EntityItem, EntityKind};
 use dioxus::prelude::*;
 
 pub enum Icon {
+    BookShelf,
     Box,
     Bubbles,
     ChevronDown,
@@ -12,9 +13,11 @@ pub enum Icon {
     Focus,
     Lambda,
     Lightbulb,
+    NodeTree,
     Pin,
     Rectangle,
     Refresh,
+    Squares,
     TextSize,
     Unpin,
     Video,
@@ -24,6 +27,7 @@ pub enum Icon {
 impl Icon {
     fn get_file_name(&self) -> (String, f32) {
         let (file_name, ratio) = match self {
+            Icon::BookShelf => ("book-shelf-line", 1.0),
             Icon::Box => ("box-3-line", 1.0),
             Icon::Bubbles => ("bubble-chart-line", 1.0),
             Icon::ChevronDown => ("arrow-down-s-line", 1.0),
@@ -34,8 +38,10 @@ impl Icon {
             Icon::Focus => ("focus-2-fill", 1.0),
             Icon::Lambda => ("custom-lambda", 1.0),
             Icon::Lightbulb => ("lightbulb-line", 1.0),
+            Icon::NodeTree => ("node-tree", 1.0),
             Icon::Pin => ("pushpin-line", 1.0),
             Icon::Refresh => ("refresh-right-fill", 1.0),
+            Icon::Squares => ("function-line", 1.0),
             Icon::TextSize => ("font-size-2", 1.0),
             Icon::Rectangle => ("rectangle-line", 1.0),
             Icon::Unpin => ("unpin-line", 1.0),
