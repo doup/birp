@@ -46,29 +46,43 @@ fn App() -> Element {
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/main.scss") }
-        Connection {}
 
-        div { class: "tabs",
-            div {
-                class: "tabs__item",
-                onclick: move |_| tool.set(Tool::Entities),
-                "Entities"
+        div { class: "layout",
+            div { class: "layout__header",
+                Connection {}
+                div { class: "tabs",
+                    div {
+                        class: "tabs__item",
+                        onclick: move |_| tool.set(Tool::Entities),
+                        "Entities"
+                    }
+                    div {
+                        class: "tabs__item",
+                        onclick: move |_| tool.set(Tool::Resources),
+                        "Resources"
+                    }
+                    div {
+                        class: "tabs__item",
+                        onclick: move |_| tool.set(Tool::Types),
+                        "Types"
+                    }
+                }
             }
-            div {
-                class: "tabs__item",
-                onclick: move |_| tool.set(Tool::Resources),
-                "Resources"
-            }
-        }
 
-        {
-            match *tool.read() {
-                Tool::Entities => rsx! {
-                    EntitiesTool {}
-                },
-                Tool::Resources => rsx! {
-                    div { "Resources" }
-                },
+            div { class: "layout__content",
+                {
+                    match *tool.read() {
+                        Tool::Entities => rsx! {
+                            EntitiesTool {}
+                        },
+                        Tool::Resources => rsx! {
+                            ResourcesTool {}
+                        },
+                        Tool::Types => rsx! {
+                            TypesTool {}
+                        },
+                    }
+                }
             }
         }
     }

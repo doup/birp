@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  user-select: none;
 }
 
 :root {
@@ -10,10 +11,22 @@
     monospace;
 }
 
+// Scrollbar styles
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(#000, 0.5);
+  border-radius: 8px;
+  border: 2px solid #fff;
+}
+
 html,
 body {
   margin: 0;
-  height: 100%;
 }
 
 html {
@@ -21,16 +34,27 @@ html {
   font-family: var(--font-sans-serif);
 }
 
-#main {
+.layout {
+  position: fixed;
+  inset: 0px;
+
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+
+  &__header {
+    flex-shrink: 0;
+  }
+
+  &__content {
+    // Ensures that the content area grows without exceeding the parent box
+    flex: 1;
+    min-height: 0;
+  }
 }
 
 .card {
   border: 1px solid black;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .button {
