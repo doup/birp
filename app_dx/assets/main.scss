@@ -62,7 +62,13 @@
   --color-neutral-60: #999999;
   --color-neutral-70: #b3b3b3;
   --color-neutral-80: #cccccc;
+  --color-neutral-85: #d9d9d9;
   --color-neutral-90: #e6e6e6;
+
+  --color-blue-46: #206ec9;
+
+  --duration: 500ms;
+  --duration-fast: 200ms;
 
   --background-color: var(--color-neutral-09);
   --scrollbar-track-color: var(--background-color);
@@ -251,17 +257,28 @@ html {
   --level: var(--entity-tree-level, 0);
   --level-padding: 12px;
   --item-height: 24px;
+  --chevron-width: 12px;
+  --chevron-margin: 2px;
 
   position: relative;
   height: 100%;
+  color: var(--color-neutral-85);
 
   &--children:before {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc(var(--level-padding) * var(--level));
-    border-left: 1px solid #ccc;
+    left: calc(var(--level-padding) * var(--level) - var(--chevron-margin));
+    border-left: 1px solid var(--color-neutral-25);
+    opacity: 0;
+    transition: opacity var(--duration);
+  }
+
+  &:hover {
+    .entity-tree--children:before {
+      opacity: 1;
+    }
   }
 
   &__item {
@@ -270,18 +287,48 @@ html {
     min-height: var(--item-height);
     padding-left: calc(var(--level-padding) * var(--level));
     padding-right: 4px;
+    position: relative;
+    border-radius: 4px;
+    z-index: 0;
 
-    &--active {
-      background-color: rgba(yellow, 0.5) !important;
+    &:hover,
+    &--active,
+    &--pinned {
+      color: var(--color-neutral-90);
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        left: calc(
+          var(--level-padding) * var(--level) + var(--chevron-width) +
+            var(--chevron-margin)
+        );
+        border-radius: 4px;
+      }
     }
 
+    &--active,
     &--pinned {
-      background-color: rgba(#000, 0.05);
+      &::before {
+        background-color: var(--color-neutral-25) !important;
+        z-index: -1;
+      }
+    }
+
+    &--active {
+      &::after {
+        border: 2px solid var(--color-blue-46);
+      }
     }
 
     &:hover {
-      background-color: rgba(yellow, 0.25);
       cursor: pointer;
+
+      &::before {
+        background-color: rgba(#fff, 0.05);
+      }
     }
   }
 
@@ -290,9 +337,11 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 12px;
-    padding-left: 2px;
+    width: var(--chevron-width);
     height: var(--item-height);
+    padding-left: 2px;
+    margin-right: var(--chevron-margin);
+    font-size: 0.9em;
   }
 
   &__kind {
@@ -302,7 +351,7 @@ html {
     justify-content: center;
     width: var(--item-height);
     height: var(--item-height);
-    font-size: 13px;
+    font-size: 0.85em;
 
     &--Entity {
       opacity: $dim-opacity;
