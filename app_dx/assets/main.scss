@@ -135,6 +135,16 @@ html {
   color: var(--color-neutral-90);
 }
 
+@keyframes pulse-opacity {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 .connection {
   $height: 40px;
 
@@ -170,6 +180,7 @@ html {
     &--disconnected {
       --connection-status-color: #ff0077;
       --connection-status-border-color: #90124d;
+      animation: pulse-opacity 2s ease-in-out infinite;
     }
   }
 
