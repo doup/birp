@@ -75,6 +75,12 @@ impl From<EntityKind> for Icon {
             EntityKind::Camera => Icon::Video,
             EntityKind::Light => Icon::Lightbulb,
             EntityKind::Mesh3d => Icon::Box,
+            EntityKind::Monitor => Icon::Computer,
+            EntityKind::Node => Icon::Rectangle,
+            EntityKind::Observer => Icon::Focus,
+            EntityKind::Pointer => Icon::Cursor,
+            EntityKind::System => Icon::Lambda,
+            EntityKind::Text => Icon::TextSize,
             EntityKind::Window => Icon::Window,
             _ => Icon::Diamond,
         }

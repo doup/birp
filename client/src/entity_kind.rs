@@ -8,6 +8,10 @@ pub const KIND_COMPONENTS: [&'static str; 11] = [
     component::LIGHT_SPOT,
     component::MESH_2D,
     component::MESH_3D,
+    component::MONITOR,
+    component::NODE,
+    component::POINTER_ID,
+    component::TEXT,
     component::WINDOW,
     // TODO(bevy_remote): See: https://github.com/bevyengine/bevy/issues/18869
     // component::OBSERVER_STATE,
@@ -21,7 +25,12 @@ pub enum EntityKind {
     Light,
     Mesh2d,
     Mesh3d,
+    Monitor,
+    Node,
     Observer,
+    Pointer,
+    System,
+    Text,
     Window,
 }
 
@@ -38,6 +47,18 @@ impl From<&EntityItem> for EntityKind {
             EntityKind::Mesh2d
         } else if value.has_component(component::MESH_3D) {
             EntityKind::Mesh3d
+        } else if value.has_component(component::MONITOR) {
+            EntityKind::Monitor
+        } else if value.has_component(component::TEXT) {
+            EntityKind::Text
+        } else if value.has_component(component::NODE) {
+            EntityKind::Node
+        } else if value.has_component(component::OBSERVER_STATE) {
+            EntityKind::Observer
+        } else if value.has_component(component::POINTER_ID) {
+            EntityKind::Pointer
+        } else if value.has_component(component::SYSTEM_ID_MARKER) {
+            EntityKind::System
         } else if value.has_component(component::WINDOW) {
             EntityKind::Window
         } else {
