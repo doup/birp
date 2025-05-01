@@ -2,7 +2,7 @@ use dioxus::desktop::{Config, WindowBuilder};
 use dioxus::prelude::*;
 
 use components::{Connection, EntitiesTool};
-use states::{ConnectionState, InspectorState};
+use states::{ConnectionState, EntitiesToolState};
 
 mod components;
 mod states;
@@ -27,7 +27,7 @@ enum Tool {
 #[component]
 fn App() -> Element {
     use_context_provider(|| ConnectionState::new("http://127.0.0.1:15702"));
-    use_context_provider(|| InspectorState::new());
+    use_context_provider(|| EntitiesToolState::new());
     let mut tool = use_signal(|| Tool::Entities);
 
     rsx! {

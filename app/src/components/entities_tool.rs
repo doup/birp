@@ -2,13 +2,13 @@ use dioxus::prelude::*;
 
 use crate::{
     components::{EntityInspector, HierarchyTree},
-    states::InspectorState,
+    states::EntitiesToolState,
 };
 
 #[component]
 pub fn EntitiesTool() -> Element {
-    let active_entity = use_context::<InspectorState>().active;
-    let pinned_entities = use_context::<InspectorState>().pinned;
+    let active_entity = use_context::<EntitiesToolState>().active;
+    let pinned_entities = use_context::<EntitiesToolState>().pinned;
 
     rsx! {
         div { class: "entities",

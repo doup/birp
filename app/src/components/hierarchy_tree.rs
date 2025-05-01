@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     components::Icon,
-    states::{ConnectionState, InspectorState},
+    states::{ConnectionState, EntitiesToolState},
 };
 
 struct HierarchyItem {
@@ -14,8 +14,8 @@ struct HierarchyItem {
 
 #[component]
 pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
-    let mut active_entity = use_context::<InspectorState>().active;
-    let pinned_entities = use_context::<InspectorState>().pinned;
+    let mut active_entity = use_context::<EntitiesToolState>().active;
+    let pinned_entities = use_context::<EntitiesToolState>().pinned;
     let client = use_context::<ConnectionState>().client;
     let is_connected = use_context::<ConnectionState>().is_connected;
     let is_children = level > 0;

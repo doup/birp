@@ -1,12 +1,12 @@
 use client::{Entity, EntityItem};
 use dioxus::prelude::*;
 
-use crate::states::{ConnectionState, InspectorState};
+use crate::states::{ConnectionState, EntitiesToolState};
 
 #[component]
 pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
-    let mut pinned = use_context::<InspectorState>().pinned;
-    let active = use_context::<InspectorState>().active;
+    let mut pinned = use_context::<EntitiesToolState>().pinned;
+    let active = use_context::<EntitiesToolState>().active;
     let client = use_context::<ConnectionState>().client;
     let update_signal = use_context::<ConnectionState>().update_signal;
 
