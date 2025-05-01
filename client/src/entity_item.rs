@@ -1,14 +1,17 @@
 use bevy_ecs::entity::Entity;
-use bevy_remote::builtin_methods::{BrpGetResponse, BrpQueryRow};
+use bevy_remote::{
+    builtin_methods::{BrpGetResponse, BrpQueryRow},
+    error_codes::COMPONENT_ERROR,
+};
 use serde_json::Value;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
-use crate::component;
+use crate::{BrpError, component};
 
 #[derive(Debug)]
 pub struct EntityItem {
     pub id: Entity,
-    pub components: HashMap<String, Option<Value>>,
+    pub components: BTreeMap<String, Option<Value>>,
 }
 
 impl EntityItem {
@@ -36,16 +39,38 @@ impl EntityItem {
 
 impl From<(Entity, BrpGetResponse)> for EntityItem {
     fn from(from: (Entity, BrpGetResponse)) -> Self {
+        let mut empty_components = vec![];
         let components = match from.1 {
-            // TODO: Check `errors``, as there are some errors that could be mapped to `None`?
-            BrpGetResponse::Lenient { components, .. } => components,
+            BrpGetResponse::Lenient { components, errors } => {
+                // Some errors happen when the component is not
+                // reflectable/serializable. We still want to list them.
+                for (component, value) in errors.iter() {
+                    let error = serde_json::from_value::<BrpError>(value.clone());
+
+                    if let Ok(error) = error {
+                        // This is OK as long as in `bevy/get` we don't query
+                        // for NON-REFLECTABLE components that are not part of
+                        // the entity
+                        if error.code == COMPONENT_ERROR {
+                            empty_components.push(component.clone());
+                        }
+                    }
+                }
+
+                components
+            }
             BrpGetResponse::Strict(components) => components,
         };
 
-        let components: HashMap<String, Option<Value>> = components
+        let mut components: BTreeMap<String, Option<Value>> = components
             .into_iter()
             .map(|(key, value)| (key, Some(value)))
             .collect();
+
+        for component in empty_components {
+            // Only insert `None` if the key is not already in `components`
+            components.entry(component).or_insert(None);
+        }
 
         Self {
             id: from.0,
@@ -56,7 +81,7 @@ impl From<(Entity, BrpGetResponse)> for EntityItem {
 
 impl From<BrpQueryRow> for EntityItem {
     fn from(from: BrpQueryRow) -> Self {
-        let mut components: HashMap<String, Option<Value>> = from
+        let mut components: BTreeMap<String, Option<Value>> = from
             .components
             .into_iter()
             .map(|(key, value)| (key, Some(value)))
