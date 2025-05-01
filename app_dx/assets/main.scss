@@ -49,6 +49,7 @@
   --color-neutral-09: #171717;
   --color-neutral-12: #1f1f1f;
   --color-neutral-16: #2a2a2a;
+  --color-neutral-19: #303030;
   --color-neutral-20: #343434;
   --color-neutral-22: #393939;
   --color-neutral-24: #3c3c3c;
@@ -62,6 +63,9 @@
   --color-neutral-70: #b3b3b3;
   --color-neutral-80: #cccccc;
   --color-neutral-90: #e6e6e6;
+
+  --background-color: var(--color-neutral-09);
+  --scrollbar-track-color: var(--background-color);
 }
 
 // Scrollbar styles
@@ -72,20 +76,20 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(#000, 0.5);
+  background: rgba(#fff, 0.35);
   border-radius: 8px;
-  border: 2px solid #fff;
+  border: 2px solid var(--scrollbar-track-color);
 }
 
 // HTML and Body
 html,
 body {
   margin: 0;
+  background-color: var(--background-color);
   color: var(--color-neutral-90);
 }
 
 html {
-  background-color: var(--color-neutral-09);
   font-family: var(--font-sans-serif);
 }
 
@@ -110,8 +114,11 @@ html {
 }
 
 .card {
-  background-color: var(--color-neutral-16);
-  border: 1px solid black;
+  --card-bg-color: var(--color-neutral-16);
+  --scrollbar-track-color: var(--card-bg-color);
+
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--color-neutral-19);
   border-radius: 4px;
 }
 
