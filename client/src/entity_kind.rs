@@ -17,11 +17,11 @@ pub const KIND_COMPONENTS: [&'static str; 11] = [
 #[derive(Debug)]
 pub enum EntityKind {
     Camera,
+    Entity,
     Light,
     Mesh2d,
     Mesh3d,
     Observer,
-    Unknown,
     Window,
 }
 
@@ -41,7 +41,7 @@ impl From<&EntityItem> for EntityKind {
         } else if value.has_component(component::WINDOW) {
             EntityKind::Window
         } else {
-            EntityKind::Unknown
+            EntityKind::Entity
         }
     }
 }
