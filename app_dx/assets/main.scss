@@ -236,13 +236,11 @@ html {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    scrollbar-gutter: stable;
   }
 
   &__details {
     width: 100%;
     overflow-y: auto;
-    scrollbar-gutter: stable;
 
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -526,7 +524,6 @@ html {
 
   &__sidebar {
     overflow-y: auto;
-    scrollbar-gutter: stable;
   }
 
   &__sidebar-header {
@@ -561,7 +558,6 @@ html {
 
   &__schema {
     overflow-y: auto;
-    scrollbar-gutter: stable;
   }
 }
 
