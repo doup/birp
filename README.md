@@ -1,5 +1,5 @@
 # Bevy Remote Inspector
 
 ```sh
-dx serve -p app
+dx serve -p app_dx
 ```
