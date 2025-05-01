@@ -247,3 +247,59 @@ html {
     background-color: rgba(#000, 0.05);
   }
 }
+
+.json-value {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px !important;
+  word-break: break-all;
+  margin-left: -2px;
+  padding-left: 1ch;
+
+  &--null {
+    color: #9d361f;
+  }
+
+  &--bool {
+    color: #8e5c00;
+  }
+
+  &--number-negative {
+    color: #0e46af;
+    padding-left: 0;
+  }
+
+  &--number-positive {
+    color: #610eaf;
+  }
+
+  &--string {
+    color: green;
+  }
+}
+
+.json-value-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #bbb;
+  border-left: 1.5px solid #999;
+  font-size: 12px !important;
+
+  th,
+  td {
+    border: 1px solid #bbb;
+  }
+
+  th {
+    background-color: #eee;
+    padding-inline: 4px;
+    text-align: left;
+    // white-space: nowrap;
+  }
+
+  td {
+    background-color: #fff;
+    padding: 2px;
+    width: 100%;
+  }
+}

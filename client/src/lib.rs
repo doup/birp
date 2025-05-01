@@ -16,9 +16,11 @@ pub mod component;
 mod entity_item;
 mod entity_kind;
 
+// (Re)Exports
 pub use bevy_ecs::entity::Entity;
 pub use entity_item::EntityItem;
 pub use entity_kind::EntityKind;
+pub use serde_json::Value;
 
 #[derive(Debug, Error)]
 pub enum ClientError {
