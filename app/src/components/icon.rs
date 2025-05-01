@@ -22,7 +22,7 @@ pub enum Icon {
 }
 
 impl Icon {
-    pub fn render(&self) -> Element {
+    fn get_file_name(&self) -> (String, f32) {
         let (file_name, ratio) = match self {
             Icon::Box => ("box-3-line", 1.0),
             Icon::Bubbles => ("bubble-chart-line", 1.0),
@@ -43,9 +43,26 @@ impl Icon {
             Icon::Window => ("window-fill", 1.0),
         };
 
+        (file_name.into(), ratio)
+    }
+
+    pub fn render(&self) -> Element {
+        let (file_name, ratio) = self.get_file_name();
+
         rsx! {
             i {
                 class: "icon",
+                style: "--icon-url: url(\"/assets/icons/{file_name}.svg\"); --icon-ratio: {ratio};",
+            }
+        }
+    }
+
+    pub fn render_with_class(&self, class: &str) -> Element {
+        let (file_name, ratio) = self.get_file_name();
+
+        rsx! {
+            i {
+                class: "icon {class}",
                 style: "--icon-url: url(\"/assets/icons/{file_name}.svg\"); --icon-ratio: {ratio};",
             }
         }
