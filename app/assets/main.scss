@@ -248,6 +248,78 @@ html {
   }
 }
 
+
+.types-tool {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 4px;
+  padding: 4px;
+
+  &__sidebar {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+
+  &__sidebar-header {
+    padding: 4px;
+    margin-bottom: 8px;
+    position: sticky;
+    top: 0px;
+  }
+
+  &__filter {
+    width: 100%;
+  }
+
+  &__types {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__type {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    word-break: break-word;
+    padding: 2px 4px;
+    min-height: 20px;
+
+    &:hover {
+      background-color: rgba(yellow, 0.25);
+      cursor: pointer;
+    }
+  }
+
+  &__schema {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+}
+
+.type {
+  &__name {
+    font-weight: bold;
+    word-break: break-all;
+    margin-bottom: 4px;
+  }
+
+  &__schema {
+    table {
+      font-size: 12px;
+
+      pre {
+        margin: 0;
+      }
+    }
+
+    pre {
+      word-break: break-all;
+      text-wrap-mode: inherit;
+    }
+  }
+}
+
 .json-value {
   display: inline-block;
   font-family: var(--font-mono);

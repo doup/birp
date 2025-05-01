@@ -8,6 +8,7 @@ pub fn Connection() -> Element {
     let mut automatic_poll = use_context::<ConnectionState>().automatic_poll;
     let mut is_connected = use_context::<ConnectionState>().is_connected;
     let mut poll_interval = use_context::<ConnectionState>().poll_interval;
+    let mut schema = use_context::<ConnectionState>().schema;
     let mut update_signal = use_context::<ConnectionState>().update_signal;
     let mut url = use_context::<ConnectionState>().url;
     let client = use_context::<ConnectionState>().client;
@@ -25,9 +26,23 @@ pub fn Connection() -> Element {
     // Check if the client is connected
     use_coroutine(move |_rx: UnboundedReceiver<()>| async move {
         loop {
-            match client().ping().await {
-                Ok(_) => is_connected.set(true),
-                Err(_) => is_connected.set(false),
+            let prev_is_connected = is_connected();
+            let new_is_connected = match client().ping().await {
+                Ok(_) => true,
+                Err(_) => false,
+            };
+
+            // Load the schema each time we connect
+            if !prev_is_connected && new_is_connected {
+                match client().get_schema().await {
+                    Ok(new_schema) => {
+                        schema.set(new_schema);
+                        is_connected.set(true)
+                    }
+                    Err(_) => is_connected.set(false),
+                }
+            } else {
+                is_connected.set(new_is_connected);
             }
 
             tokio::time::sleep(Duration::from_millis(1000)).await;
@@ -57,10 +72,7 @@ pub fn Connection() -> Element {
             input {
                 class: "connection__url",
                 value: url(),
-                oninput: move |e| {
-                    let new_url = e.data.value();
-                    url.set(new_url);
-                },
+                oninput: move |e| url.set(e.data.value()),
             }
 
             div { class: "connection__polling polling",
