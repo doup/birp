@@ -37,14 +37,20 @@ pub enum BrpResponse<T> {
     Error { id: u32, error: BrpError },
 }
 
-#[derive(Debug, Deserialize)]
+// TODO: Copied from `bevy_remote`, use Bevy type once it implements `Display`
+/// An error a request might return.
+#[derive(Debug, Deserialize, Clone)]
 pub struct BrpError {
+    /// Defines the general type of the error.
     pub code: i16,
+    /// Short, human-readable description of the error.
     pub message: String,
-    // Optional additional error data
+    /// Optional additional error data.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<Value>,
 }
 
+// TODO(bevy_remote): Move to Bevy code?
 impl fmt::Display for BrpError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} (code={})", self.message, self.code)
