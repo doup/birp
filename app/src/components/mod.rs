@@ -1,3 +1,4 @@
+mod component_inspector;
 mod connection;
 mod entities_tool;
 mod entity_inspector;
@@ -7,6 +8,7 @@ mod json_value;
 mod resources_tool;
 mod types_tool;
 
+pub use component_inspector::*;
 pub use connection::*;
 pub use entities_tool::*;
 pub use entity_inspector::*;

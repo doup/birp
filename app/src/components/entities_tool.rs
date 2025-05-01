@@ -11,12 +11,12 @@ pub fn EntitiesTool() -> Element {
     let pinned_entities = use_context::<EntitiesToolState>().pinned;
 
     rsx! {
-        div { class: "entities",
-            div { class: "card entities__hierarchy",
+        div { class: "entities-tool",
+            div { class: "card entities-tool__hierarchy",
                 HierarchyTree { level: 0, parent_id: None }
             }
 
-            div { class: "entities__details",
+            div { class: "entities-tool__details",
                 for id in pinned_entities().iter() {
                     EntityInspector { id: *id, is_pinned: true }
                 }

@@ -3,6 +3,8 @@ use dioxus::prelude::*;
 
 use crate::states::{ConnectionState, EntitiesToolState};
 
+use crate::components::{ComponentInspector, Icon};
+
 #[component]
 pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
     let mut pinned = use_context::<EntitiesToolState>().pinned;
@@ -30,35 +32,41 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
         });
     });
 
-    rsx! {
-        div { class,
-            {
-                match &*entity.read() {
-                    Some(entity) => rsx! {
-                        {format!("{}", entity.name().unwrap_or(format!("{}", id)))}
-                    },
-                    None => rsx! {},
+    match &*entity.read() {
+        Some(entity) => rsx! {
+            div { class,
+                div { class: "entity-inspector__header",
+                    {Icon::from(entity).render_with_class("entity-inspector__kind-icon")}
+                    {format!("{}", entity.name().unwrap_or(format!("{}", id)))}
+                    div {
+                        class: "entity-inspector__pin",
+                        onclick: move |_| {
+                            pinned
+                                .with_mut(|pinned| {
+                                    if pinned.contains(&id) {
+                                        pinned.retain(|&x| x != id);
+                                    } else {
+                                        pinned.push(id);
+                                    }
+                                });
+                        },
+
+                        if is_pinned {
+                            {Icon::Unpin.render()}
+                        } else {
+                            {Icon::Pin.render()}
+                        }
+                    }
+                }
+
+                for (component , value) in entity.components.iter() {
+                    ComponentInspector {
+                        type_path: component.to_string(),
+                        value: value.clone(),
+                    }
                 }
             }
-
-            button {
-                onclick: move |_| {
-                    pinned
-                        .with_mut(|pinned| {
-                            if pinned.contains(&id) {
-                                pinned.retain(|&x| x != id);
-                            } else {
-                                pinned.push(id);
-                            }
-                        });
-                },
-
-                if is_pinned {
-                    "Unpin"
-                } else {
-                    "Pin"
-                }
-            }
-        }
+        },
+        None => rsx! {},
     }
 }

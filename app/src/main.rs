@@ -7,6 +7,7 @@ use states::{ConnectionState, EntitiesToolState, TypesToolState};
 
 mod components;
 mod states;
+mod utils;
 
 fn main() {
     // Initialize tracing with filter

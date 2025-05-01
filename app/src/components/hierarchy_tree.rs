@@ -114,9 +114,16 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
                             ""
                         }
                     }
-                    div { class: "entity-tree__kind", {Icon::from(&item.entity).render()} }
-                    div { class: "entity-tree__name",
-                        {format!("{}", item.entity.name().unwrap_or_default())}
+                    div { class: "entity-tree__kind entity-tree__kind--{EntityKind::from(&item.entity):?}",
+                        {Icon::from(&item.entity).render()}
+                    }
+                    match item.entity.name() {
+                        Some(name) => rsx! {
+                            div { class: "entity-tree__name", "{name}" }
+                        },
+                        None => rsx! {
+                            div { class: "entity-tree__name entity-tree__name--placeholder", "{EntityKind::from(&item.entity):?}" }
+                        },
                     }
                     span { class: "entity-tree__id", "{item.entity.id}" }
                 }
