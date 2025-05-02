@@ -1,4 +1,4 @@
-use client::{Entity, EntityItem};
+use client::{Entity, EntityItem, EntityKind};
 use dioxus::prelude::*;
 
 use crate::states::{ConnectionState, EntitiesToolState};
@@ -37,8 +37,18 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
             div { class,
                 div { class: "entity-inspector__header-wrapper",
                     div { class: "entity-inspector__header",
-                        {Icon::from(entity).render_with_class("entity-inspector__kind-icon")}
-                        {format!("{}", entity.name().unwrap_or(format!("{}", id)))}
+                        div { class: "entity-inspector__kind-icon", {Icon::from(entity).render()} }
+                        match entity.name() {
+                            Some(name) => rsx! {
+                                span { class: "entity-inspector__name", "{name}" }
+                            },
+                            None => rsx! {
+                                span { class: "entity-inspector__name entity-inspector__name--placeholder",
+                                    "{EntityKind::from(entity):?}"
+                                }
+                            },
+                        }
+                        span { class: "entity-inspector__id", "{id}" }
                         div {
                             class: "entity-inspector__pin",
                             onclick: move |_| {

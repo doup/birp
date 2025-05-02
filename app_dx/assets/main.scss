@@ -502,7 +502,6 @@ html {
     height: $header-height;
 
     background-color: var(--color-neutral-05);
-    padding-left: 4px;
 
     border-radius: 4px 4px 0 0;
     border-width: 1px 1px 0 1px;
@@ -513,23 +512,33 @@ html {
     font-size: 12px;
   }
 
-  &__kind-icon {
-    margin-right: 4px;
+  &__name {
+    &--placeholder {
+      opacity: 0.5;
+    }
   }
 
+  &__id {
+    opacity: 0.5;
+    margin-left: auto;
+  }
+
+  &__kind-icon,
   &__pin {
     width: $header-height;
     height: $header-height;
 
     display: flex;
     align-items: center;
-    justify-self: center;
+    justify-content: center;
+  }
 
-    margin-left: auto;
+  &__pin {
+    margin-left: 4px;
     cursor: pointer;
 
     &:hover {
-      background-color: rgba(#000, 0.05);
+      background-color: rgba(#fff, 0.05);
     }
   }
 
