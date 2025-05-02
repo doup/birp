@@ -37,7 +37,7 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
             span { class: "json-value json-value--string", "\"{s}\"" }
         },
         Value::Array(arr) => rsx! {
-            table { class: "json-value-table",
+            table { class: "json-value-table json-value-table--array",
                 for (idx , item) in arr.iter().enumerate() {
                     {
                         let item_path = get_array_path(&parent_path, idx.to_string().as_str());

@@ -480,6 +480,7 @@ html {
 
 .entity-inspector {
   $header-height: 24px;
+  $dim-opacity: 0.5;
 
   height: fit-content;
   position: relative;
@@ -514,12 +515,12 @@ html {
 
   &__name {
     &--placeholder {
-      opacity: 0.5;
+      opacity: $dim-opacity;
     }
   }
 
   &__id {
-    opacity: 0.5;
+    opacity: $dim-opacity;
     margin-left: auto;
   }
 
@@ -552,6 +553,12 @@ html {
 }
 
 .component {
+  &:hover {
+    .component__header {
+      color: var(--color-neutral-90);
+    }
+  }
+
   &__header {
     min-height: 24px;
     position: sticky;
@@ -737,8 +744,18 @@ html {
   border-left: 2px solid var(--color-neutral-11);
   font-size: 12px !important;
 
+  &--array {
+    > tr > th {
+      color: var(--color-neutral-60);
+    }
+  }
+
   tr:hover {
     background-color: var(--json-value-highlight-color);
+
+    > th {
+      color: var(--color-neutral-90);
+    }
   }
 
   th,
@@ -752,6 +769,7 @@ html {
     overflow-wrap: break-word;
     font-weight: var(--weight-normal);
     background-color: rgba(#000, 0.1);
+    color: var(--color-neutral-70);
   }
 
   td {
