@@ -1,4 +1,4 @@
-use client::{SchemaType, Value};
+use client::Value;
 use dioxus::prelude::*;
 
 use crate::{components::JsonValue, states::ConnectionState, utils::get_short_type_name};
@@ -20,7 +20,7 @@ pub fn ComponentInspector(type_path: String, value: Option<Value>) -> Element {
             div { class: "component__value",
                 {
                     match bevy_type() {
-                        Some(bevy_type) => {
+                        Some(_bevy_type) => {
                             if let Some(value) = value {
                                 rsx! {
                                     // div { style: "font-size: 10px;", "{bevy_type.schema_type:?} {bevy_type.kind:?}" }

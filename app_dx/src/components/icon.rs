@@ -1,6 +1,7 @@
 use client::{EntityItem, EntityKind};
 use dioxus::prelude::*;
 
+#[allow(dead_code)]
 pub enum Icon {
     BookShelf,
     Box,
@@ -24,6 +25,7 @@ pub enum Icon {
     Window,
 }
 
+#[allow(dead_code)]
 impl Icon {
     fn get_file_name(&self) -> (String, f32) {
         let (file_name, ratio) = match self {

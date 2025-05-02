@@ -1,10 +1,7 @@
-use dioxus::{html::div, logger::tracing::info, prelude::*};
+use dioxus::prelude::*;
 use std::time::Duration;
 
-use crate::{
-    components::{Icon, connection},
-    states::ConnectionState,
-};
+use crate::{components::Icon, states::ConnectionState};
 
 #[component]
 pub fn Connection() -> Element {
@@ -109,9 +106,6 @@ pub fn Connection() -> Element {
                         let slider_value = e.data.value().parse::<u32>().unwrap_or(0);
                         let ms = 125 * 2u64.pow(slider_value);
                         poll_interval.set(ms);
-                    },
-                    onchange: move |e| {
-                        info!("final slider value: {}", e.data.value());
                     },
                 }
                 span { class: "polling__value", "{poll_interval()}ms" }
