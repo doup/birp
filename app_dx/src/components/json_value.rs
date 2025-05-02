@@ -44,17 +44,42 @@ pub fn JsonValue(value: Value) -> Element {
                 }
             }
         },
-        Value::Object(obj) => rsx! {
-            table { class: "json-value-table",
-                for (key , value) in obj.iter() {
-                    tr {
-                        th { title: "{key}", {key.replace('_', "_\u{200B}")} }
-                        td {
-                            JsonValue { value: value.clone() }
+        Value::Object(obj) => {
+            let has_subobjects = obj
+                .iter()
+                .any(|(_, v)| matches!(v, Value::Object(_)) || matches!(v, Value::Array(_)));
+
+            if has_subobjects {
+                rsx! {
+                    div { class: "json-value-key-list",
+                        for (key , value) in obj.iter() {
+                            div { class: "json-value-key-list__item",
+                                div {
+                                    class: "json-value-key-list__key",
+                                    title: "{key}",
+                                    "{key}"
+                                }
+                                div { class: "json-value-key-list__value",
+                                    JsonValue { value: value.clone() }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                rsx! {
+                    table { class: "json-value-table",
+                        for (key , value) in obj.iter() {
+                            tr {
+                                th { title: "{key}", "{key}" }
+                                td {
+                                    JsonValue { value: value.clone() }
+                                }
+                            }
                         }
                     }
                 }
             }
-        },
+        }
     }
 }

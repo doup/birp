@@ -46,7 +46,9 @@
   --font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
     monospace;
 
+  --color-neutral-05: #0d0d0d;
   --color-neutral-09: #171717;
+  --color-neutral-11: #1c1c1c;
   --color-neutral-12: #1f1f1f;
   --color-neutral-16: #2a2a2a;
   --color-neutral-19: #303030;
@@ -54,6 +56,7 @@
   --color-neutral-22: #393939;
   --color-neutral-24: #3c3c3c;
   --color-neutral-25: #404040;
+  --color-neutral-27: #444444;
   --color-neutral-29: #494949;
   --color-neutral-30: #4d4d4d;
   --color-neutral-40: #666666;
@@ -82,6 +85,7 @@
 
   --background-color: var(--color-neutral-09);
   --scrollbar-track-color: var(--background-color);
+  --json-value-highlight-color: #{rgba(#fff, 0.025)};
 }
 
 @mixin click-scale() {
@@ -480,19 +484,33 @@ html {
   height: fit-content;
   position: relative;
 
-  &__header {
+  // This is a hack so the to show the background color behind the header
+  // rounded corners. Otherwise the content side-borders would be visible.
+  // Change `background-color` to `red` or `transparent` to see the effect.
+  &__header-wrapper {
     position: sticky;
     top: 0px;
-    z-index: 999;
+    z-index: 1;
 
+    margin: -1px -1px 0 -1px;
+    background-color: var(--background-color);
+  }
+
+  &__header {
     display: flex;
     align-items: center;
-    font-size: 12px;
     height: $header-height;
+
+    background-color: var(--color-neutral-05);
     padding-left: 4px;
-    background-color: #aaa;
-    font-weight: bold;
+
     border-radius: 4px 4px 0 0;
+    border-width: 1px 1px 0 1px;
+    border-style: solid;
+    border-color: var(--color-neutral-19);
+
+    font-weight: var(--weight-normal);
+    font-size: 12px;
   }
 
   &__kind-icon {
@@ -533,14 +551,16 @@ html {
     display: flex;
     align-items: center;
 
-    background-color: #ccc;
+    background-color: var(--color-neutral-25);
+    color: var(--color-neutral-80);
     font-size: 12px;
-    font-weight: bold;
+    font-weight: var(--weight-medium);
     padding-inline: 4px;
     padding-block: 4px;
   }
 
   &__value {
+    background-color: var(--color-neutral-16);
     padding: 2px;
   }
 
@@ -550,8 +570,12 @@ html {
     padding: 4px;
   }
 
+  &__no-value {
+    color: var(--color-neutral-45);
+  }
+
   &__not-registered {
-    color: #800000;
+    color: #da4a81;
   }
 }
 
@@ -603,7 +627,7 @@ html {
 
 .type {
   &__name {
-    font-weight: bold;
+    font-weight: var(--weight-bold);
     word-break: break-all;
     margin-bottom: 4px;
   }
@@ -633,48 +657,91 @@ html {
   padding-left: 1ch;
 
   &--null {
-    color: #9d361f;
+    color: #ff8468;
   }
 
   &--bool {
-    color: #8e5c00;
+    color: #e9cf3d;
   }
 
   &--number-negative {
-    color: #0e46af;
+    color: #538aef;
     padding-left: 0;
   }
 
   &--number-positive {
-    color: #610eaf;
+    color: #ba71ff;
   }
 
   &--string {
-    color: green;
+    color: #96d235;
+  }
+}
+
+.json-value-key-list {
+  --header-bg-color: var(--color-neutral-12);
+  --border-radius: 4px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &__item {
+    &:hover {
+      > .json-value-key-list__key {
+        color: var(--color-neutral-90);
+      }
+
+      > .json-value-key-list__value {
+        background-color: var(--json-value-highlight-color);
+      }
+    }
+  }
+
+  &__key {
+    padding: 2px 4px;
+    background-color: var(--header-bg-color);
+    color: var(--color-neutral-70);
+    font-size: 12px;
+    font-weight: var(--weight-light);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+
+  &__value {
+    padding: 2px;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: var(--header-bg-color);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
   }
 }
 
 .json-value-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #bbb;
-  border-left: 1.5px solid #999;
+  border-spacing: 0;
+  border: 1px solid var(--color-neutral-12);
+  border-left: 2px solid var(--color-neutral-11);
   font-size: 12px !important;
+
+  tr:hover {
+    background-color: var(--json-value-highlight-color);
+  }
 
   th,
   td {
-    border: 1px solid #bbb;
+    border: 1px solid var(--color-neutral-12);
   }
 
   th {
-    background-color: #eee;
     padding-inline: 4px;
     text-align: left;
-    // white-space: nowrap;
+    overflow-wrap: break-word;
+    font-weight: var(--weight-normal);
+    background-color: rgba(#000, 0.1);
   }
 
   td {
-    background-color: #fff;
     padding: 2px;
     width: 100%;
   }

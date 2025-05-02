@@ -23,7 +23,7 @@ pub fn ComponentInspector(type_path: String, value: Option<Value>) -> Element {
                         Some(bevy_type) => {
                             if let Some(value) = value {
                                 rsx! {
-                                    div { style: "font-size: 10px;", "{bevy_type.schema_type:?} {bevy_type.kind:?}" }
+                                    // div { style: "font-size: 10px;", "{bevy_type.schema_type:?} {bevy_type.kind:?}" }
                                     JsonValue { value }
                                 }
                             } else {

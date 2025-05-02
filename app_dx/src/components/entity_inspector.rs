@@ -35,26 +35,28 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
     match &*entity.read() {
         Some(entity) => rsx! {
             div { class,
-                div { class: "entity-inspector__header",
-                    {Icon::from(entity).render_with_class("entity-inspector__kind-icon")}
-                    {format!("{}", entity.name().unwrap_or(format!("{}", id)))}
-                    div {
-                        class: "entity-inspector__pin",
-                        onclick: move |_| {
-                            pinned
-                                .with_mut(|pinned| {
-                                    if pinned.contains(&id) {
-                                        pinned.retain(|&x| x != id);
-                                    } else {
-                                        pinned.push(id);
-                                    }
-                                });
-                        },
+                div { class: "entity-inspector__header-wrapper",
+                    div { class: "entity-inspector__header",
+                        {Icon::from(entity).render_with_class("entity-inspector__kind-icon")}
+                        {format!("{}", entity.name().unwrap_or(format!("{}", id)))}
+                        div {
+                            class: "entity-inspector__pin",
+                            onclick: move |_| {
+                                pinned
+                                    .with_mut(|pinned| {
+                                        if pinned.contains(&id) {
+                                            pinned.retain(|&x| x != id);
+                                        } else {
+                                            pinned.push(id);
+                                        }
+                                    });
+                            },
 
-                        if is_pinned {
-                            {Icon::Unpin.render()}
-                        } else {
-                            {Icon::Pin.render()}
+                            if is_pinned {
+                                {Icon::Unpin.render()}
+                            } else {
+                                {Icon::Pin.render()}
+                            }
                         }
                     }
                 }
