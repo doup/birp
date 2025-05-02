@@ -2,7 +2,7 @@ use client::Value;
 use dioxus::prelude::*;
 
 #[component]
-pub fn JsonValue(value: Value) -> Element {
+pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
     match value {
         Value::Null => rsx! {
             span { class: "json-value json-value--null", "Null" }
@@ -38,11 +38,16 @@ pub fn JsonValue(value: Value) -> Element {
         },
         Value::Array(arr) => rsx! {
             table { class: "json-value-table",
-                for item in arr.iter() {
-                    tr {
-                        th { "⚬" }
-                        td {
-                            JsonValue { value: item.clone() }
+                for (idx , item) in arr.iter().enumerate() {
+                    {
+                        let item_path = get_array_path(&parent_path, idx.to_string().as_str());
+                        rsx! {
+                            tr {
+                                th { title: "{item_path}", "⚬" }
+                                td {
+                                    JsonValue { value: item.clone(), parent_path: Some(item_path.clone()) }
+                                }
+                            }
                         }
                     }
                 }
@@ -57,14 +62,15 @@ pub fn JsonValue(value: Value) -> Element {
                 rsx! {
                     div { class: "json-value-key-list",
                         for (key , value) in obj.iter() {
-                            div { class: "json-value-key-list__item",
-                                div {
-                                    class: "json-value-key-list__key",
-                                    title: "{key}",
-                                    "{key}"
-                                }
-                                div { class: "json-value-key-list__value",
-                                    JsonValue { value: value.clone() }
+                            {
+                                let item_path = get_object_path(&parent_path, key);
+                                rsx! {
+                                    div { class: "json-value-key-list__item",
+                                        div { class: "json-value-key-list__key", title: "{item_path}", "{key}" }
+                                        div { class: "json-value-key-list__value",
+                                            JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -74,10 +80,15 @@ pub fn JsonValue(value: Value) -> Element {
                 rsx! {
                     table { class: "json-value-table",
                         for (key , value) in obj.iter() {
-                            tr {
-                                th { title: "{key}", "{key}" }
-                                td {
-                                    JsonValue { value: value.clone() }
+                            {
+                                let item_path = get_object_path(&parent_path, key);
+                                rsx! {
+                                    tr {
+                                        th { title: "{item_path}", "{key}" }
+                                        td {
+                                            JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -86,4 +97,12 @@ pub fn JsonValue(value: Value) -> Element {
             }
         }
     }
+}
+
+fn get_array_path(parent_path: &Option<String>, key: &str) -> String {
+    format!("{}[{key}]", parent_path.as_ref().unwrap_or(&String::new()))
+}
+
+fn get_object_path(parent_path: &Option<String>, key: &str) -> String {
+    format!("{}.{key}", parent_path.as_ref().unwrap_or(&String::new()))
 }
