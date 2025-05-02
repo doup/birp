@@ -74,6 +74,14 @@
   --scrollbar-track-color: var(--background-color);
 }
 
+@mixin click-scale() {
+  transition: transform var(--duration-fast);
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 // Scrollbar styles
 ::-webkit-scrollbar {
   width: 8px;
@@ -129,10 +137,18 @@ html {
 }
 
 .button {
+  @include click-scale();
+
   background-color: var(--color-neutral-22);
   border: 1px solid var(--color-neutral-29);
   border-radius: 6px;
-  color: var(--color-neutral-90);
+  color: var(--color-neutral-80);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-neutral-25);
+    color: var(--color-neutral-90);
+  }
 }
 
 @keyframes pulse-opacity {
@@ -416,6 +432,8 @@ html {
   border-top: 1px solid var(--color-neutral-16);
 
   &__item {
+    @include click-scale();
+
     height: 32px;
     display: flex;
     align-items: center;
