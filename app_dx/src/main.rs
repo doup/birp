@@ -1,4 +1,4 @@
-use dioxus::desktop::{Config, WindowBuilder};
+use dioxus::desktop::{Config, LogicalSize, WindowBuilder};
 use dioxus::prelude::*;
 use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -25,6 +25,7 @@ fn main() {
             Config::new().with_window(
                 WindowBuilder::new()
                     .with_resizable(true)
+                    .with_min_inner_size(LogicalSize::new(530.0, 400.0))
                     .with_title("Remote Inspector"),
             ),
         )
