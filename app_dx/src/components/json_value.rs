@@ -7,15 +7,19 @@ pub fn JsonValue(value: Value) -> Element {
         Value::Null => rsx! {
             span { class: "json-value json-value--null", "Null" }
         },
-        Value::Bool(b) => rsx! {
-            span { class: "json-value json-value--bool",
-                if b {
-                    "True"
-                } else {
-                    "False"
+        Value::Bool(b) => {
+            let modifier = if b { "true" } else { "false" };
+
+            rsx! {
+                span { class: "json-value json-value--{modifier}",
+                    if b {
+                        "True"
+                    } else {
+                        "False"
+                    }
                 }
             }
-        },
+        }
         Value::Number(n) => {
             let mut class = "json-value json-value--number-positive";
 

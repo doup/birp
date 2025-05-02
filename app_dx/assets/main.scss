@@ -660,8 +660,12 @@ html {
     color: #ff8468;
   }
 
-  &--bool {
-    color: #e9cf3d;
+  &--true {
+    color: #96d235;
+  }
+
+  &--false {
+    color: #e9b03d;
   }
 
   &--number-negative {
