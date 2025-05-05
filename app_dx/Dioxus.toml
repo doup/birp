@@ -1,7 +1,7 @@
 [application]
 
 # App (Project) Name
-name = "bevy-brp-client"
+name = "birp"
 
 # Dioxus App Default Platform
 # desktop, web
@@ -13,10 +13,14 @@ out_dir = "dist"
 # assets file folder
 asset_dir = "assets"
 
+[bundle]
+identifier = "net.gutxi.birp"
+publisher = "Gutxi"
+
 [web.app]
 
 # HTML title tag content
-title = "bevy-brp-client"
+title = "BiRP"
 
 [web.watcher]
 

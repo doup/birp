@@ -26,7 +26,7 @@ fn main() {
                 WindowBuilder::new()
                     .with_resizable(true)
                     .with_min_inner_size(LogicalSize::new(530.0, 400.0))
-                    .with_title("Remote Inspector"),
+                    .with_title("BiRP"),
             ),
         )
         .launch(App)
