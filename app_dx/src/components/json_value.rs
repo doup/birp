@@ -56,7 +56,7 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
         Value::Object(obj) => {
             let has_subobjects = obj
                 .iter()
-                .any(|(_, v)| matches!(v, Value::Object(_)) || matches!(v, Value::Array(_)));
+                .any(|(_, v)| matches!(v, Value::Object(_) | Value::Array(_)));
 
             if has_subobjects {
                 rsx! {
