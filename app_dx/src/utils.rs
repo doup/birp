@@ -1,3 +1,34 @@
+pub fn add_zero_width_spaces(value: &str) -> String {
+    let mut formatted = String::with_capacity(value.len());
+    let mut chars = value.chars();
+    let mut prev = None;
+
+    while let Some(char) = chars.next() {
+        if let Some(prev_char) = prev {
+            formatted.push(prev_char);
+
+            // Check if the previous character is lowercase and the current character is uppercase
+            if prev_char.is_lowercase() && char.is_uppercase() {
+                formatted.push('\u{200B}'); // Insert Zero-Width Space
+            }
+
+            // Check if the previous character is '<'
+            if prev_char == '<' {
+                formatted.push('\u{200B}');
+            }
+        }
+
+        prev = Some(char); // Move to the next character
+    }
+
+    // Push the last character if it exists
+    if let Some(last_char) = prev {
+        formatted.push(last_char);
+    }
+
+    formatted
+}
+
 pub fn get_short_type_name(full_path: &str) -> String {
     // Extract the base type name (part before any generics)
     let (base_path, generics) = match full_path.find('<') {
