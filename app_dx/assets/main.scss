@@ -142,10 +142,10 @@ html {
 }
 
 .card {
-  --card-bg-color: var(--color-neutral-16);
-  --scrollbar-track-color: var(--card-bg-color);
+  --background-color: var(--color-neutral-16);
+  --scrollbar-track-color: var(--color-neutral-16);
 
-  background-color: var(--card-bg-color);
+  background-color: var(--background-color);
   border: 1px solid var(--color-neutral-19);
   border-radius: 4px;
 }
@@ -162,6 +162,28 @@ html {
   &:hover {
     background-color: var(--color-neutral-25);
     color: var(--color-neutral-90);
+  }
+}
+
+.text-input {
+  width: 100%;
+  height: 32px;
+
+  background-color: var(--color-neutral-22);
+  border-radius: 6px;
+  border: 1px solid var(--color-neutral-29);
+  padding-inline: 8px;
+
+  font-size: 14px;
+  color: var(--color-neutral-90);
+
+  &--large {
+    height: 40px;
+    font-size: 16px;
+  }
+
+  &:focus {
+    outline: none;
   }
 }
 
@@ -216,21 +238,9 @@ html {
 
   &__url {
     flex-grow: 1;
-    height: 40px;
-    font-size: 16px;
-    width: 100%;
-    border: 0;
-    border-radius: 0px 6px 6px 0px;
-    background-color: var(--color-neutral-22);
-    border-color: var(--color-neutral-29);
-    border-style: solid;
-    border-width: 1px 1px 1px 0px;
-    padding-left: 8px;
-    color: var(--color-neutral-90);
-
-    &:focus {
-      outline: none;
-    }
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-left-width: 0px;
   }
 
   &__polling {
@@ -279,7 +289,6 @@ html {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    padding-block: 2px;
   }
 
   &__content {
@@ -297,10 +306,10 @@ html {
 }
 
 .item-tree {
-  $dim-opacity: 0.35;
-
+  --dim-opacity: 0.35;
   --level: var(--item-tree-level, 0);
   --level-padding: 12px;
+  --item-padding-left-base: 0px;
   --item-height: 24px;
   --chevron-width: 12px;
   --chevron-margin: 2px;
@@ -308,6 +317,18 @@ html {
   position: relative;
   height: 100%;
   color: var(--color-neutral-85);
+
+  &--flat {
+    --item-padding-left-base: 4px;
+    --chevron-width: 0px;
+    --chevron-margin: 0px;
+
+    padding-left: 4px;
+  }
+
+  &--root {
+    padding-block: 2px;
+  }
 
   &--children:before {
     content: "";
@@ -330,7 +351,9 @@ html {
     display: flex;
     align-items: center;
     min-height: var(--item-height);
-    padding-left: calc(var(--level-padding) * var(--level));
+    padding-left: calc(
+      var(--item-padding-left-base) + var(--level-padding) * var(--level)
+    );
     padding-right: 4px;
     position: relative;
     border-radius: 4px;
@@ -390,7 +413,7 @@ html {
     font-size: 0.9em;
   }
 
-  &__kind {
+  &__icon {
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -398,10 +421,6 @@ html {
     width: var(--item-height);
     height: var(--item-height);
     font-size: 0.85em;
-
-    &--Entity {
-      opacity: $dim-opacity;
-    }
   }
 
   &__name {
@@ -412,7 +431,7 @@ html {
     text-wrap: pretty;
 
     &--placeholder {
-      opacity: $dim-opacity;
+      opacity: var(--dim-opacity);
     }
   }
 
@@ -423,6 +442,16 @@ html {
     opacity: 0.4;
     padding-right: 2px;
   }
+}
+
+.kind-icon {
+  &--Entity {
+    opacity: var(--dim-opacity);
+  }
+
+  // &--Light {
+  //   color: #ffc800;
+  // }
 }
 
 .icon {
@@ -603,57 +632,29 @@ html {
   }
 }
 
-.types-tool {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 4px;
+.types-filter {
   padding: 4px;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  background-color: var(--background-color);
 
-  &__sidebar {
-    overflow-y: auto;
-  }
-
-  &__sidebar-header {
-    padding: 4px;
-    margin-bottom: 8px;
-    position: sticky;
-    top: 0px;
-  }
-
-  &__filter {
+  &__input {
     width: 100%;
-  }
-
-  &__types {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__type {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    word-break: break-word;
-    padding: 2px 4px;
-    min-height: 20px;
-
-    &:hover {
-      background-color: rgba(yellow, 0.25);
-      cursor: pointer;
-    }
-  }
-
-  &__schema {
-    overflow-y: auto;
   }
 }
 
 .type {
+  @extend .card;
+
   &__name {
     font-weight: var(--weight-bold);
     word-break: break-all;
     margin-bottom: 4px;
+    font-size: 14px;
+    padding: 4px 6px;
+    background-color: var(--color-neutral-05);
+    border-radius: 4px 4px 0 0;
   }
 
   &__schema {
@@ -670,6 +671,12 @@ html {
       text-wrap-mode: inherit;
     }
   }
+}
+
+.required {
+  color: #ff0073;
+  font-weight: normal !important;
+  margin-left: 2px;
 }
 
 .json-value {
@@ -772,7 +779,7 @@ html {
   }
 
   th {
-    padding-inline: 4px;
+    padding: 2px 4px;
     text-align: left;
     overflow-wrap: break-word;
     font-weight: var(--weight-normal);

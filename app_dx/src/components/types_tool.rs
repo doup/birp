@@ -18,11 +18,11 @@ pub fn TypesTool() -> Element {
     };
 
     rsx! {
-        div { class: "types-tool",
-            div { class: "types-tool__sidebar card",
-                div { class: "types-tool__sidebar-header",
+        div { class: "sidebar-layout",
+            div { class: "sidebar-layout__sidebar",
+                div { class: "types-filter",
                     input {
-                        class: "types-tool__filter",
+                        class: "types-filter__input text-input",
                         name: "type-filter",
                         value: filter(),
                         autocomplete: "off",
@@ -30,21 +30,26 @@ pub fn TypesTool() -> Element {
                     }
                 }
 
-                div { class: "types-tool__types",
+                div { class: "item-tree item-tree--root item-tree--flat",
                     for (ty , schema) in schema().iter() {
                         if filter().is_empty() || ty.to_lowercase().contains(&filter()) {
                             div {
-                                class: "types-tool__type",
+                                class: format!(
+                                    "item-tree__item {}",
+                                    if active().as_ref() == Some(ty) { "item-tree__item--active" } else { "" },
+                                ),
                                 onclick: row_click(ty.clone()),
-                                // Replace '<' with '<' followed by a Zero-Width Space
-                                {schema.short_path.replace('<', "<\u{200B}")}
+                                div { class: "item-tree__name",
+                                    // Replace '<' with '<' followed by a Zero-Width Space
+                                    {schema.short_path.replace('<', "<\u{200B}")}
+                                }
                             }
                         }
                     }
                 }
             }
 
-            div { class: "types-tool__schema",
+            div { class: "sidebar-layout__content",
                 if let Some(active_ty) = active() {
                     if let Some(schema) = schema().get(&active_ty) {
                         div { class: "type",
@@ -116,7 +121,7 @@ pub fn TypesTool() -> Element {
                                                                 "{key}"
                                                                 if schema.required.contains(key) {
                                                                     span {
-                                                                        style: "color: red; font-weight: normal !important;",
+                                                                        class: "required",
                                                                         title: "Required",
                                                                         "*"
                                                                     }

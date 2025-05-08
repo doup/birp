@@ -80,7 +80,7 @@ pub fn Connection() -> Element {
 
             div { class: connection_status_class() }
             input {
-                class: "connection__url",
+                class: "connection__url text-input text-input--large",
                 value: url(),
                 oninput: move |e| url.set(e.data.value()),
             }

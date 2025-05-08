@@ -110,7 +110,7 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
                             ""
                         }
                     }
-                    div { class: "item-tree__kind item-tree__kind--{EntityKind::from(&item.entity):?}",
+                    div { class: "item-tree__icon kind-icon--{EntityKind::from(&item.entity):?}",
                         {Icon::from(&item.entity).render()}
                     }
                     match item.entity.name() {
