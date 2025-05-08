@@ -20,17 +20,17 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
     let is_connected = use_context::<ConnectionState>().is_connected;
     let is_children = level > 0;
     let update_signal = use_context::<ConnectionState>().update_signal;
-    let entity_tree_class = format!(
-        "entity-tree {} {}",
+    let item_tree_class = format!(
+        "item-tree {} {}",
         if is_connected() {
-            "entity-tree--connected"
+            "item-tree--connected"
         } else {
-            "entity-tree--disconnected"
+            "item-tree--disconnected"
         },
         if is_children {
-            "entity-tree--children"
+            "item-tree--children"
         } else {
-            "entity-tree--root"
+            "item-tree--root"
         }
     );
 
@@ -84,26 +84,22 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
     });
 
     rsx! {
-        div { class: entity_tree_class, style: "--entity-tree-level: {level}",
+        div { class: item_tree_class, style: "--item-tree-level: {level}",
             for (entity_id , item) in items.read().iter() {
                 div {
                     key: "{entity_id}",
                     class: format!(
-                        "entity-tree__item {} {}",
+                        "item-tree__item {} {}",
                         if pinned_entities().contains(entity_id) {
-                            "entity-tree__item--pinned"
+                            "item-tree__item--pinned"
                         } else {
                             ""
                         },
-                        if active_entity() == Some(*entity_id) {
-                            "entity-tree__item--active"
-                        } else {
-                            ""
-                        },
+                        if active_entity() == Some(*entity_id) { "item-tree__item--active" } else { "" },
                     ),
                     onclick: row_click(*entity_id),
 
-                    div { class: "entity-tree__chevron",
+                    div { class: "item-tree__chevron",
                         if item.entity.children().len() > 0 {
                             if item.expanded {
                                 {Icon::ChevronDown.render()}
@@ -114,22 +110,22 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
                             ""
                         }
                     }
-                    div { class: "entity-tree__kind entity-tree__kind--{EntityKind::from(&item.entity):?}",
+                    div { class: "item-tree__kind item-tree__kind--{EntityKind::from(&item.entity):?}",
                         {Icon::from(&item.entity).render()}
                     }
                     match item.entity.name() {
                         Some(name) => rsx! {
-                            div { class: "entity-tree__name", "{name}" }
+                            div { class: "item-tree__name", "{name}" }
                         },
                         None => rsx! {
-                            div { class: "entity-tree__name entity-tree__name--placeholder", "{EntityKind::from(&item.entity):?}" }
+                            div { class: "item-tree__name item-tree__name--placeholder", "{EntityKind::from(&item.entity):?}" }
                         },
                     }
-                    span { class: "entity-tree__id", "{item.entity.id}" }
+                    span { class: "item-tree__id", "{item.entity.id}" }
                 }
 
                 if item.expanded {
-                    div { class: "entity-tree__children",
+                    div { class: "item-tree__children",
                         HierarchyTree { level: level + 1, parent_id: Some(item.entity.id) }
                     }
                 }

@@ -291,10 +291,10 @@ html {
   }
 }
 
-.entity-tree {
+.item-tree {
   $dim-opacity: 0.35;
 
-  --level: var(--entity-tree-level, 0);
+  --level: var(--item-tree-level, 0);
   --level-padding: 12px;
   --item-height: 24px;
   --chevron-width: 12px;
@@ -316,7 +316,7 @@ html {
   }
 
   &:hover {
-    .entity-tree--children:before {
+    .item-tree--children:before {
       opacity: 1;
     }
   }
