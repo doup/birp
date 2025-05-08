@@ -4,6 +4,7 @@ use dioxus::prelude::*;
 use crate::{
     components::JsonValue,
     states::{ConnectionState, TypesToolState},
+    utils::add_zero_width_spaces,
 };
 
 #[component]
@@ -40,8 +41,7 @@ pub fn TypesTool() -> Element {
                                 ),
                                 onclick: row_click(ty.clone()),
                                 div { class: "item-tree__name",
-                                    // Replace '<' with '<' followed by a Zero-Width Space
-                                    {schema.short_path.replace('<', "<\u{200B}")}
+                                    {add_zero_width_spaces(&schema.short_path)}
                                 }
                             }
                         }
