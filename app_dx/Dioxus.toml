@@ -14,6 +14,7 @@ out_dir = "dist"
 asset_dir = "assets"
 
 [bundle]
+icon = ["app_dx/app-icon.png"]
 identifier = "net.gutxi.birp"
 publisher = "Gutxi"
 
