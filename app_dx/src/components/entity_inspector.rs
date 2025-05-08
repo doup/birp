@@ -14,7 +14,7 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
 
     let mut entity = use_signal(|| None::<EntityItem>);
     let class = format!(
-        "entity-inspector {} card",
+        "entity-inspector {}",
         if active() == Some(id) {
             "entity-inspector--active"
         } else {

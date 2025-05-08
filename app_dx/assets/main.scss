@@ -427,7 +427,7 @@ html {
     padding-inline: 2px 4px;
     padding-block: 4px;
     font-size: 12px;
-    line-height: 1.2em;
+    line-height: 1.3em;
     text-wrap: pretty;
 
     &--placeholder {
@@ -521,6 +521,8 @@ html {
 
   height: fit-content;
   position: relative;
+  border: 1px solid var(--color-neutral-19);
+  border-radius: 4px;
 
   // This is a hack so the to show the background color behind the header
   // rounded corners. Otherwise the content side-borders would be visible.
@@ -650,7 +652,6 @@ html {
   &__name {
     font-weight: var(--weight-bold);
     word-break: break-all;
-    margin-bottom: 4px;
     font-size: 14px;
     padding: 4px 6px;
     background-color: var(--color-neutral-05);
@@ -658,6 +659,8 @@ html {
   }
 
   &__schema {
+    padding: 2px;
+
     table {
       font-size: 12px;
 
