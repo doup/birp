@@ -66,6 +66,12 @@ pub fn TypesTool() -> Element {
                             }
                             div { class: "type-schema",
                                 table { class: "json-value-table",
+                                    tr {
+                                        th { "Type" }
+                                        td {
+                                            JsonValue { value: Value::from(schema.type_path.clone()) }
+                                        }
+                                    }
                                     // if let Some(crate_name) = &schema.crate_name {
                                     //     tr {
                                     //         th { "Crate Name" }
