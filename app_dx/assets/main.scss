@@ -709,6 +709,12 @@ html {
   }
 }
 
+.json-value-empty {
+  font-size: 12px;
+  padding: 2px 4px;
+  opacity: 0.5;
+}
+
 .json-value-key-list {
   --header-bg-color: var(--color-neutral-12);
   --border-radius: 4px;

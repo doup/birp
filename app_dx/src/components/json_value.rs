@@ -38,14 +38,18 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
         },
         Value::Array(arr) => rsx! {
             table { class: "json-value-table json-value-table--array",
-                for (idx , item) in arr.iter().enumerate() {
-                    {
-                        let item_path = get_array_path(&parent_path, idx.to_string().as_str());
-                        rsx! {
-                            tr {
-                                th { title: "{item_path}", "⚬" }
-                                td {
-                                    JsonValue { value: item.clone(), parent_path: Some(item_path.clone()) }
+                if arr.is_empty() {
+                    div { class: "json-value-empty", "Empty Array" }
+                } else {
+                    for (idx , item) in arr.iter().enumerate() {
+                        {
+                            let item_path = get_array_path(&parent_path, idx.to_string().as_str());
+                            rsx! {
+                                tr {
+                                    th { title: "{item_path}", "⚬" }
+                                    td {
+                                        JsonValue { value: item.clone(), parent_path: Some(item_path.clone()) }
+                                    }
                                 }
                             }
                         }
@@ -61,14 +65,18 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
             if has_subobjects {
                 rsx! {
                     div { class: "json-value-key-list",
-                        for (key , value) in obj.iter() {
-                            {
-                                let item_path = get_object_path(&parent_path, key);
-                                rsx! {
-                                    div { class: "json-value-key-list__item",
-                                        div { class: "json-value-key-list__key", title: "{item_path}", "{key}" }
-                                        div { class: "json-value-key-list__value",
-                                            JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
+                        if obj.is_empty() {
+                            div { class: "json-value-empty", "Empty Object" }
+                        } else {
+                            for (key , value) in obj.iter() {
+                                {
+                                    let item_path = get_object_path(&parent_path, key);
+                                    rsx! {
+                                        div { class: "json-value-key-list__item",
+                                            div { class: "json-value-key-list__key", title: "{item_path}", "{key}" }
+                                            div { class: "json-value-key-list__value",
+                                                JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
+                                            }
                                         }
                                     }
                                 }
@@ -79,14 +87,18 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
             } else {
                 rsx! {
                     table { class: "json-value-table",
-                        for (key , value) in obj.iter() {
-                            {
-                                let item_path = get_object_path(&parent_path, key);
-                                rsx! {
-                                    tr {
-                                        th { title: "{item_path}", "{key}" }
-                                        td {
-                                            JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
+                        if obj.is_empty() {
+                            div { class: "json-value-empty", "Empty Object" }
+                        } else {
+                            for (key , value) in obj.iter() {
+                                {
+                                    let item_path = get_object_path(&parent_path, key);
+                                    rsx! {
+                                        tr {
+                                            th { title: "{item_path}", "{key}" }
+                                            td {
+                                                JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
+                                            }
                                         }
                                     }
                                 }
