@@ -6,30 +6,39 @@ use crate::states::{ConnectionState, EntitiesToolState};
 use crate::components::{ComponentInspector, Icon};
 
 #[component]
-pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
+pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
     let mut pinned = use_context::<EntitiesToolState>().pinned;
     let active = use_context::<EntitiesToolState>().active;
     let client = use_context::<ConnectionState>().client;
     let update_signal = use_context::<ConnectionState>().update_signal;
 
     let mut entity = use_signal(|| None::<EntityItem>);
+    let update_fn = move || {
+        async move {
+            let res = client().get(id()).await;
+            // TODO: Add proper error state
+            entity.set(res.ok());
+        }
+    };
+
     let class = format!(
         "inspector-card {}",
-        if active() == Some(id) {
+        if active() == Some(id()) {
             "inspector-card--active"
         } else {
             ""
         }
     );
 
+    // Update data when `id` changes
+    use_effect(move || {
+        let _ = id();
+        spawn(update_fn());
+    });
+
     use_effect(move || {
         let _ = update_signal();
-
-        spawn(async move {
-            let res = client().get(id).await;
-            // TODO: Add proper error state
-            entity.set(res.ok());
-        });
+        spawn(update_fn());
     });
 
     match &*entity.read() {
@@ -52,10 +61,10 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
                             onclick: move |_| {
                                 pinned
                                     .with_mut(|pinned| {
-                                        if pinned.contains(&id) {
-                                            pinned.retain(|&x| x != id);
+                                        if pinned.contains(&id()) {
+                                            pinned.retain(|&x| x != id());
                                         } else {
-                                            pinned.push(id);
+                                            pinned.push(id());
                                         }
                                     });
                             },
