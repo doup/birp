@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
 
 use components::{Connection, EntitiesTool, Icon, ResourcesTool, TypesTool};
-use states::{ConnectionState, EntitiesToolState, TypesToolState};
+use states::{ConnectionState, EntitiesToolState, ResourcesToolState, TypesToolState};
 
 mod components;
 mod states;
@@ -43,6 +43,7 @@ enum Tool {
 fn App() -> Element {
     use_context_provider(|| ConnectionState::new("http://127.0.0.1:15702"));
     use_context_provider(|| EntitiesToolState::new());
+    use_context_provider(|| ResourcesToolState::new());
     use_context_provider(|| TypesToolState::new());
 
     let mut tool = use_signal(|| Tool::Entities);

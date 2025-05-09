@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::{
-    states::ConnectionState,
+    states::{ConnectionState, ResourcesToolState},
     utils::{add_zero_width_spaces, get_short_type_name},
 };
 
@@ -9,7 +9,13 @@ use crate::{
 pub fn ResourcesTool() -> Element {
     let client = use_context::<ConnectionState>().client;
     let update_signal = use_context::<ConnectionState>().update_signal;
+    let mut active = use_context::<ResourcesToolState>().active;
     let mut resources = use_signal(Vec::<String>::new);
+    let row_click = |ty: String| {
+        move |_| {
+            active.set(Some(ty.clone()));
+        }
+    };
 
     use_effect(move || {
         let _ = update_signal();
@@ -32,16 +38,25 @@ pub fn ResourcesTool() -> Element {
         div { class: "sidebar-layout",
             div { class: "sidebar-layout__sidebar",
                 div { class: "item-tree item-tree--root item-tree--flat",
-                    for resource in resources.iter() {
-                        div { class: "item-tree__item",
+                    for res in resources.iter() {
+                        div {
+                            class: format!(
+                                "item-tree__item {}",
+                                if active().as_ref() == Some(&res) { "item-tree__item--active" } else { "" },
+                            ),
+                            onclick: row_click(res.clone()),
                             div { class: "item-tree__name",
-                                {add_zero_width_spaces(&get_short_type_name(&resource))}
+                                {add_zero_width_spaces(&get_short_type_name(&res))}
                             }
                         }
                     }
                 }
             }
-            div { class: "sidebar-layout__content" }
+            div { class: "sidebar-layout__content",
+                if let Some(active_res) = active() {
+                    {active_res}
+                }
+            }
         }
     }
 }
