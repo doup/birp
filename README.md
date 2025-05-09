@@ -5,6 +5,11 @@
   <p align="center"><em>a <strong>read-only</strong> <a href="https://bevyengine.org" target="_blank">Bevy 0.16</a> remote protocol (BRP) inspector built using <a href="https://dioxuslabs.com" target="_blank">Dioxus</a></em></p>
 </div>
 
+> [!NOTE]  
+> This project was created to learn Dioxus.
+> It might evolve… or not.
+> I probably won't invest a ton more time in this, as BSN and reactivity are expected in the near future (maybe in 0.18? 🤞).
+
 ## Build BiRP
 
 - Install the [Dioxus CLI](https://dioxuslabs.com/learn/0.6/getting_started/#install-the-dioxus-cli)
