@@ -2,7 +2,7 @@ use client::Value;
 use dioxus::prelude::*;
 
 use crate::{
-    components::JsonValue,
+    components::{Icon, JsonValue},
     states::{ConnectionState, TypesToolState},
     utils::add_zero_width_spaces,
 };
@@ -52,13 +52,18 @@ pub fn TypesTool() -> Element {
             div { class: "sidebar-layout__content",
                 if let Some(active_ty) = active() {
                     if let Some(schema) = schema().get(&active_ty) {
-                        div { class: "type",
-                            div {
-                                class: "type__name",
-                                title: "{schema.type_path}",
-                                "{schema.short_path}"
+                        div { class: "inspector-card",
+                            div { class: "inspector-card__header-wrapper",
+                                div { class: "inspector-card__header",
+                                    div { class: "inspector-card__icon", {Icon::Squares.render()} }
+                                    div {
+                                        class: "inspector-card__name",
+                                        title: "{schema.type_path}",
+                                        "{schema.short_path}"
+                                    }
+                                }
                             }
-                            div { class: "type__schema",
+                            div { class: "type-schema",
                                 table { class: "json-value-table",
                                     // if let Some(crate_name) = &schema.crate_name {
                                     //     tr {

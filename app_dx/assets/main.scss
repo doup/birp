@@ -652,33 +652,20 @@ html {
   }
 }
 
-.type {
-  @extend .card;
+.type-schema {
+  padding: 2px;
 
-  &__name {
-    font-weight: var(--weight-bold);
-    word-break: break-all;
-    font-size: 14px;
-    padding: 4px 6px;
-    background-color: var(--color-neutral-05);
-    border-radius: 4px 4px 0 0;
-  }
-
-  &__schema {
-    padding: 2px;
-
-    table {
-      font-size: 12px;
-
-      pre {
-        margin: 0;
-      }
-    }
+  table {
+    font-size: 12px;
 
     pre {
-      word-break: break-all;
-      text-wrap-mode: inherit;
+      margin: 0;
     }
+  }
+
+  pre {
+    word-break: break-all;
+    text-wrap-mode: inherit;
   }
 }
 
