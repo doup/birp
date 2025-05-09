@@ -516,13 +516,17 @@ html {
 }
 
 .inspector-card {
+  --border-color: var(--color-neutral-19);
+  --background-color: var(--color-neutral-16);
+
   $header-height: 24px;
   $dim-opacity: 0.5;
 
   height: fit-content;
   position: relative;
-  border: 1px solid var(--color-neutral-19);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
+  background-color: var(--background-color);
 
   // This is a hack so the to show the background color behind the header
   // rounded corners. Otherwise the content side-borders would be visible.
@@ -533,7 +537,7 @@ html {
     z-index: 1;
 
     margin: -1px -1px 0 -1px;
-    background-color: var(--background-color);
+    background-color: var(--color-neutral-09);
   }
 
   &__header {
@@ -546,7 +550,7 @@ html {
     border-radius: 4px 4px 0 0;
     border-width: 1px 1px 0 1px;
     border-style: solid;
-    border-color: var(--color-neutral-19);
+    border-color: var(--border-color);
 
     font-weight: var(--weight-normal);
     font-size: 12px;
@@ -587,7 +591,8 @@ html {
   }
 
   &--active {
-    background-color: rgba(#000, 0.05);
+    --border-color: var(--color-blue-46);
+    --background-color: hsl(212, 5%, 18%);
   }
 }
 
