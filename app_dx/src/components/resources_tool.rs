@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::{
+    components::ResourceInspector,
     states::{ConnectionState, ResourcesToolState},
     utils::{add_zero_width_spaces, get_short_type_name},
 };
@@ -54,7 +55,7 @@ pub fn ResourcesTool() -> Element {
             }
             div { class: "sidebar-layout__content",
                 if let Some(active_res) = active() {
-                    {active_res}
+                    ResourceInspector { resource_type: active_res.clone() }
                 }
             }
         }

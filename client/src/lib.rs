@@ -205,13 +205,22 @@ impl BrpClient {
         }
     }
 
+    pub async fn get_resource(&self, resource: String) -> Result<Value, ClientError> {
+        let res = self
+            .call(
+                "bevy/get_resource",
+                Some(json!({
+                    "resource": resource,
+                })),
+            )
+            .await?;
+
+        Ok(res)
+    }
+
     pub async fn get_schema(&self) -> Result<BTreeMap<String, JsonSchemaBevyType>, ClientError> {
         let res = self.call("bevy/registry/schema", None).await?;
         let schema = from_value::<BTreeMap<String, JsonSchemaBevyType>>(res)?;
-
-        let resources = self.list_resources().await?;
-        println!("Resources: {:?}", resources);
-
         Ok(schema)
     }
 
