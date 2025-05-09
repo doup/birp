@@ -64,6 +64,7 @@
   --color-neutral-50: #808080;
   --color-neutral-60: #999999;
   --color-neutral-70: #b3b3b3;
+  --color-neutral-75: #bfbfbf;
   --color-neutral-80: #cccccc;
   --color-neutral-85: #d9d9d9;
   --color-neutral-90: #e6e6e6;
@@ -323,7 +324,7 @@ html {
     --chevron-width: 0px;
     --chevron-margin: 0px;
 
-    padding-left: 4px;
+    padding-left: 2px;
   }
 
   &--root {
@@ -358,6 +359,7 @@ html {
     position: relative;
     border-radius: 4px;
     z-index: 0;
+    color: var(--color-neutral-75);
 
     &:hover,
     &--active,
@@ -620,7 +622,6 @@ html {
   }
 
   &__value {
-    background-color: var(--color-neutral-16);
     padding: 2px;
   }
 
