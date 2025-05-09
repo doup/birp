@@ -35,6 +35,7 @@ pub fn TypesTool() -> Element {
                     for (ty , schema) in schema().iter() {
                         if filter().is_empty() || ty.to_lowercase().contains(&filter()) {
                             div {
+                                key: ty,
                                 class: format!(
                                     "item-tree__item {}",
                                     if active().as_ref() == Some(ty) { "item-tree__item--active" } else { "" },
@@ -121,7 +122,7 @@ pub fn TypesTool() -> Element {
                                             td {
                                                 table { class: "json-value-table",
                                                     for (key , value) in schema.properties.iter() {
-                                                        tr {
+                                                        tr { key,
                                                             th {
                                                                 "{key}"
                                                                 if schema.required.contains(key) {

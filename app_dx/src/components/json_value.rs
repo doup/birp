@@ -72,7 +72,7 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
                                 {
                                     let item_path = get_object_path(&parent_path, key);
                                     rsx! {
-                                        div { class: "json-value-key-list__item",
+                                        div { key, class: "json-value-key-list__item",
                                             div { class: "json-value-key-list__key", title: "{item_path}", "{key}" }
                                             div { class: "json-value-key-list__value",
                                                 JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
@@ -94,7 +94,7 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
                                 {
                                     let item_path = get_object_path(&parent_path, key);
                                     rsx! {
-                                        tr {
+                                        tr { key,
                                             th { title: "{item_path}", "{key}" }
                                             td {
                                                 JsonValue { value: value.clone(), parent_path: Some(item_path.clone()) }
