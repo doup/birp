@@ -14,9 +14,9 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
 
     let mut entity = use_signal(|| None::<EntityItem>);
     let class = format!(
-        "entity-inspector {}",
+        "inspector-card {}",
         if active() == Some(id) {
-            "entity-inspector--active"
+            "inspector-card--active"
         } else {
             ""
         }
@@ -35,22 +35,20 @@ pub fn EntityInspector(id: Entity, is_pinned: bool) -> Element {
     match &*entity.read() {
         Some(entity) => rsx! {
             div { class,
-                div { class: "entity-inspector__header-wrapper",
-                    div { class: "entity-inspector__header",
-                        div { class: "entity-inspector__kind-icon", {Icon::from(entity).render()} }
+                div { class: "inspector-card__header-wrapper",
+                    div { class: "inspector-card__header",
+                        div { class: "inspector-card__icon", {Icon::from(entity).render()} }
                         match entity.name() {
                             Some(name) => rsx! {
-                                span { class: "entity-inspector__name", "{name}" }
+                                span { class: "inspector-card__name", "{name}" }
                             },
                             None => rsx! {
-                                span { class: "entity-inspector__name entity-inspector__name--placeholder",
-                                    "{EntityKind::from(entity):?}"
-                                }
+                                span { class: "inspector-card__name inspector-card__name--placeholder", "{EntityKind::from(entity):?}" }
                             },
                         }
-                        span { class: "entity-inspector__id", "{id}" }
+                        span { class: "inspector-card__id", "{id}" }
                         div {
-                            class: "entity-inspector__pin",
+                            class: "inspector-card__pin",
                             onclick: move |_| {
                                 pinned
                                     .with_mut(|pinned| {

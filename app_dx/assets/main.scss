@@ -515,7 +515,7 @@ html {
   }
 }
 
-.entity-inspector {
+.inspector-card {
   $header-height: 24px;
   $dim-opacity: 0.5;
 
@@ -563,7 +563,7 @@ html {
     margin-left: auto;
   }
 
-  &__kind-icon,
+  &__icon,
   &__pin {
     width: $header-height;
     height: $header-height;
