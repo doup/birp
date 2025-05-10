@@ -20,13 +20,13 @@ pub fn ResourceInspector(resource_type: ReadOnlySignal<String>) -> Element {
 
     // Update data when `resource_type` changes
     use_effect(move || {
-        let _ = resource_type();
+        resource_type();
         spawn(update_fn());
     });
 
     // Update on refresh tick
     use_effect(move || {
-        let _ = update_signal();
+        update_signal();
         spawn(update_fn());
     });
 

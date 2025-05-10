@@ -1,9 +1,9 @@
 pub fn add_zero_width_spaces(value: &str) -> String {
     let mut formatted = String::with_capacity(value.len());
-    let mut chars = value.chars();
+    let chars = value.chars();
     let mut prev = None;
 
-    while let Some(char) = chars.next() {
+    for char in chars {
         if let Some(prev_char) = prev {
             formatted.push(prev_char);
 

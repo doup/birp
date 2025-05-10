@@ -32,12 +32,12 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
 
     // Update data when `id` changes
     use_effect(move || {
-        let _ = id();
+        id();
         spawn(update_fn());
     });
 
     use_effect(move || {
-        let _ = update_signal();
+        update_signal();
         spawn(update_fn());
     });
 

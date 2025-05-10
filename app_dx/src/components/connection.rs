@@ -37,10 +37,7 @@ pub fn Connection() -> Element {
     use_coroutine(move |_rx: UnboundedReceiver<()>| async move {
         loop {
             let prev_is_connected = is_connected();
-            let new_is_connected = match client().ping().await {
-                Ok(_) => true,
-                Err(_) => false,
-            };
+            let new_is_connected = client().ping().await.is_ok();
 
             // Load the schema each time we connect
             if !prev_is_connected && new_is_connected {

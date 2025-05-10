@@ -23,7 +23,7 @@ To enable the [Bevy Remote Protocol (BRP)](https://github.com/bevyengine/bevy/bl
 bevy = { version = "0.16", features = ["bevy_remote"] }
 ```
 
-And add the following plugins to your game/app:
+Then add the following plugins to your game/app:
 
 ```rs
 use bevy::remote::{http::RemoteHttpPlugin, RemotePlugin};

@@ -43,7 +43,7 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
             items.with_mut(|items| {
                 let item = items.get_mut(&id).unwrap();
 
-                if item.entity.children().len() == 0 {
+                if item.entity.children().is_empty() {
                     return;
                 }
 
@@ -53,7 +53,7 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
     };
 
     use_effect(move || {
-        let _ = update_signal();
+        update_signal();
 
         spawn(async move {
             let children = client().get_children(parent_id).await;
@@ -100,7 +100,7 @@ pub fn HierarchyTree(parent_id: Option<Entity>, level: u32) -> Element {
                     onclick: row_click(*entity_id),
 
                     div { class: "item-tree__chevron",
-                        if item.entity.children().len() > 0 {
+                        if !item.entity.children().is_empty() {
                             if item.expanded {
                                 {Icon::ChevronDown.render()}
                             } else {

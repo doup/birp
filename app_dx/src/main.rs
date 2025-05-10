@@ -42,9 +42,9 @@ enum Tool {
 #[component]
 fn App() -> Element {
     use_context_provider(|| ConnectionState::new("http://127.0.0.1:15702"));
-    use_context_provider(|| EntitiesToolState::new());
-    use_context_provider(|| ResourcesToolState::new());
-    use_context_provider(|| TypesToolState::new());
+    use_context_provider(EntitiesToolState::new);
+    use_context_provider(ResourcesToolState::new);
+    use_context_provider(TypesToolState::new);
 
     let mut tool = use_signal(|| Tool::Entities);
     let tab_class = |tab: &Tool| {

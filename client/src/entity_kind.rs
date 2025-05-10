@@ -1,7 +1,7 @@
 use crate::{EntityItem, component};
 
 /// Components to guess the entity "kind"
-pub const KIND_COMPONENTS: [&'static str; 11] = [
+pub const KIND_COMPONENTS: [&str; 11] = [
     component::CAMERA,
     component::LIGHT_DIRECTIONAL,
     component::LIGHT_POINT,

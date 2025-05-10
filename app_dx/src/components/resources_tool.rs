@@ -19,7 +19,7 @@ pub fn ResourcesTool() -> Element {
     };
 
     use_effect(move || {
-        let _ = update_signal();
+        update_signal();
 
         spawn(async move {
             let res = client().list_resources().await;
