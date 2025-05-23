@@ -603,6 +603,10 @@ html {
     .component__header {
       color: var(--color-neutral-90);
     }
+
+    .component__open-icon {
+      opacity: 0.8;
+    }
   }
 
   &__header {
@@ -619,24 +623,33 @@ html {
     font-weight: var(--weight-medium);
     padding-inline: 4px;
     padding-block: 4px;
+    cursor: pointer;
+
+    &--closed {
+      .component__open-icon {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  &__open-icon {
+    margin-left: auto;
+    opacity: 0.4;
+    transition: transform var(--duration-fast), opacity var(--duration-fast);
   }
 
   &__value {
     padding: 2px;
   }
+}
 
-  &__no-value,
-  &__not-registered {
-    font-size: 12px;
-    padding: 4px;
-  }
+.issue {
+  font-size: 12px;
+  padding: 4px;
+  color: #da4a81;
 
-  &__no-value {
+  &--no-value {
     color: var(--color-neutral-45);
-  }
-
-  &__not-registered {
-    color: #da4a81;
   }
 }
 
