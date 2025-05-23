@@ -1,6 +1,10 @@
 pub const CAMERA: &str = "bevy_render::camera::camera::Camera";
 pub const CHILD_OF: &str = "bevy_ecs::hierarchy::ChildOf";
 pub const CHILDREN: &str = "bevy_ecs::hierarchy::Children";
+pub const COMPUTED_NODE_TARGET: &str = "bevy_ui::ui_node::ComputedNodeTarget";
+pub const COMPUTED_NODE: &str = "bevy_ui::ui_node::ComputedNode";
+pub const COMPUTED_TEXT_BLOCK: &str = "bevy_text::text::ComputedTextBlock";
+pub const GLOBAL_TRANSFORM: &str = "bevy_transform::components::global_transform::GlobalTransform";
 pub const LIGHT_DIRECTIONAL: &str = "bevy_pbr::light::directional_light::DirectionalLight";
 pub const LIGHT_POINT: &str = "bevy_pbr::light::point_light::PointLight";
 pub const LIGHT_SPOT: &str = "bevy_pbr::light::spot_light::SpotLight";

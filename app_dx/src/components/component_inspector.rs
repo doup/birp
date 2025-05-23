@@ -1,4 +1,4 @@
-use client::Value;
+use client::{Value, component};
 use dioxus::prelude::*;
 
 use crate::{components::JsonValue, states::ConnectionState, utils::get_short_type_name};
@@ -6,7 +6,15 @@ use crate::{components::JsonValue, states::ConnectionState, utils::get_short_typ
 #[component]
 pub fn ComponentInspector(type_path: String, value: Option<Value>) -> Element {
     let schema = use_context::<ConnectionState>().schema;
-    let mut is_open = use_signal(|| true);
+    let mut is_open = use_signal(|| {
+        !vec![
+            component::COMPUTED_NODE_TARGET,
+            component::COMPUTED_NODE,
+            component::COMPUTED_TEXT_BLOCK,
+            component::GLOBAL_TRANSFORM,
+        ]
+        .contains(&type_path.as_str())
+    });
     let header_class = use_memo(move || {
         format!(
             "component__header {}",
