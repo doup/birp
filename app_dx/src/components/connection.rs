@@ -79,6 +79,9 @@ pub fn Connection() -> Element {
             input {
                 class: "connection__url text-input text-input--large",
                 value: url(),
+                autocomplete: "off",
+                autocapitalize: "off",
+                spellcheck: "false",
                 oninput: move |e| url.set(e.data.value()),
             }
 

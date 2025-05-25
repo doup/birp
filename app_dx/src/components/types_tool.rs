@@ -27,7 +27,9 @@ pub fn TypesTool() -> Element {
                         name: "type-filter",
                         value: filter(),
                         autocomplete: "off",
-                        oninput: move |e| filter.set(e.data.value().to_lowercase()),
+                        autocapitalize: "off",
+                        spellcheck: "false",
+                        oninput: move |e| filter.set(e.data.value()),
                     }
                 }
 
