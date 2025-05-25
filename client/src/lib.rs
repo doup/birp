@@ -230,6 +230,27 @@ impl BrpClient {
         Ok(resources)
     }
 
+    pub async fn mutate_component(
+        &self,
+        id: Entity,
+        component: String,
+        path: String,
+        value: Value,
+    ) -> Result<(), ClientError> {
+        self.call(
+            "bevy/mutate_component",
+            Some(json!({
+                "entity": id,
+                "component": component,
+                "path": path,
+                "value": value,
+            })),
+        )
+        .await?;
+
+        Ok(())
+    }
+
     pub async fn ping(&self) -> Result<(), ClientError> {
         self.call("rpc.discover", None).await?;
         Ok(())
