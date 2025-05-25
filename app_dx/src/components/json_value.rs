@@ -1,6 +1,8 @@
 use client::Value;
 use dioxus::prelude::*;
 
+use crate::utils::{get_array_path, get_object_path};
+
 #[component]
 pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
     match value {
@@ -109,12 +111,4 @@ pub fn JsonValue(value: Value, parent_path: Option<String>) -> Element {
             }
         }
     }
-}
-
-fn get_array_path(parent_path: &Option<String>, key: &str) -> String {
-    format!("{}[{key}]", parent_path.as_ref().unwrap_or(&String::new()))
-}
-
-fn get_object_path(parent_path: &Option<String>, key: &str) -> String {
-    format!("{}.{key}", parent_path.as_ref().unwrap_or(&String::new()))
 }

@@ -29,6 +29,14 @@ pub fn add_zero_width_spaces(value: &str) -> String {
     formatted
 }
 
+pub fn get_array_path(parent_path: &Option<String>, key: &str) -> String {
+    format!("{}[{key}]", parent_path.as_ref().unwrap_or(&String::new()))
+}
+
+pub fn get_object_path(parent_path: &Option<String>, key: &str) -> String {
+    format!("{}.{key}", parent_path.as_ref().unwrap_or(&String::new()))
+}
+
 pub fn get_short_type_name(full_path: &str) -> String {
     // Extract the base type name (part before any generics)
     let (base_path, generics) = match full_path.find('<') {
