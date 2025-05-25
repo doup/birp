@@ -80,6 +80,7 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
 
                 for (component , value) in entity.components.iter() {
                     ComponentInspector {
+                        key: "{component}",
                         type_path: component.to_string(),
                         value: value.clone(),
                     }
