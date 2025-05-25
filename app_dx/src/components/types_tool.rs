@@ -35,7 +35,7 @@ pub fn TypesTool() -> Element {
 
                 div { class: "item-tree item-tree--root item-tree--flat",
                     for (ty , schema) in schema().iter() {
-                        if filter().is_empty() || ty.to_lowercase().contains(&filter()) {
+                        if filter().is_empty() || ty.to_lowercase().contains(&filter().to_lowercase()) {
                             div {
                                 key: ty,
                                 class: format!(
