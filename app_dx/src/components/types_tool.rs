@@ -12,6 +12,7 @@ pub fn TypesTool() -> Element {
     let schema = use_context::<ConnectionState>().schema;
     let mut active = use_context::<TypesToolState>().active;
     let mut filter = use_context::<TypesToolState>().filter;
+    let filter_lowercase = use_memo(move || filter().to_lowercase());
     let row_click = |ty: String| {
         move |_| {
             active.set(Some(ty.clone()));
@@ -35,7 +36,7 @@ pub fn TypesTool() -> Element {
 
                 div { class: "item-tree item-tree--root item-tree--flat",
                     for (ty , schema) in schema().iter() {
-                        if filter().is_empty() || ty.to_lowercase().contains(&filter().to_lowercase()) {
+                        if filter().is_empty() || ty.to_lowercase().contains(&filter_lowercase()) {
                             div {
                                 key: ty,
                                 class: format!(
