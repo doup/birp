@@ -598,6 +598,21 @@ html {
   }
 }
 
+.marker-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 4px;
+
+  &__item {
+    font-size: 12px;
+    background-color: var(--color-neutral-25);
+    padding: 4px 8px;
+    border-radius: 16px;
+    line-height: 1;
+  }
+}
+
 .component {
   &:hover {
     .component__header {

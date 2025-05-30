@@ -1,15 +1,17 @@
-use client::{Entity, EntityItem, EntityKind};
+use client::{Entity, EntityItem, EntityKind, SchemaKind, SchemaType};
 use dioxus::prelude::*;
 
 use crate::states::{ConnectionState, EntitiesToolState};
 
 use crate::components::{ComponentInspector, Icon};
+use crate::utils::get_short_type_name;
 
 #[component]
 pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
     let mut pinned = use_context::<EntitiesToolState>().pinned;
     let active = use_context::<EntitiesToolState>().active;
     let client = use_context::<ConnectionState>().client;
+    let schema = use_context::<ConnectionState>().schema;
     let update_signal = use_context::<ConnectionState>().update_signal;
 
     let mut entity = use_signal(|| None::<EntityItem>);
@@ -20,6 +22,26 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
             entity.set(res.ok());
         }
     };
+    let marker_components = use_memo(move || {
+        entity.read().as_ref().map_or(vec![], |entity| {
+            entity
+                .components
+                .iter()
+                .filter(|(component, _)| {
+                    // TODO: Improve this check, maybe also check for the
+                    // `Value`? For example "Frustum" and "VisibleEntities" in a
+                    // Camera are not markers. But right now are considered as such.
+                    schema().get(component.as_str()).map_or(false, |s| {
+                        s.kind == SchemaKind::Struct
+                            && s.schema_type == SchemaType::Object
+                            && s.additional_properties == Some(false)
+                            && s.properties.is_empty()
+                    })
+                })
+                .map(|(component, _)| component.clone())
+                .collect()
+        })
+    });
 
     let class = format!(
         "inspector-card {}",
@@ -78,11 +100,23 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
                     }
                 }
 
+                if !marker_components().is_empty() {
+                    div { class: "marker-components",
+                        for component in marker_components() {
+                            div { class: "marker-components__item", {get_short_type_name(&component)} }
+                        }
+                    }
+                }
+
+
                 for (component , value) in entity.components.iter() {
-                    ComponentInspector {
-                        key: "{component}",
-                        type_path: component.to_string(),
-                        value: value.clone(),
+                    if !marker_components().contains(&component) {
+                        ComponentInspector {
+                            key: "{component}",
+                            id: id(),
+                            type_path: component.to_string(),
+                            value: value.clone(),
+                        }
                     }
                 }
             }
