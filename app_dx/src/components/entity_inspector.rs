@@ -31,7 +31,7 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
                     // TODO: Improve this check, maybe also check for the
                     // `Value`? For example "Frustum" and "VisibleEntities" in a
                     // Camera are not markers. But right now are considered as such.
-                    schema().get(component.as_str()).map_or(false, |s| {
+                    schema().get(component.as_str()).is_some_and(|s| {
                         s.kind == SchemaKind::Struct
                             && s.schema_type == SchemaType::Object
                             && s.additional_properties == Some(false)
@@ -110,7 +110,7 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
 
 
                 for (component , value) in entity.components.iter() {
-                    if !marker_components().contains(&component) {
+                    if !marker_components().contains(component) {
                         ComponentInspector {
                             key: "{component}",
                             id: id(),

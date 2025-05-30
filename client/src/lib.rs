@@ -2,7 +2,7 @@ use bevy_remote::builtin_methods::{BrpGetResponse, BrpQueryRow};
 use entity_kind::KIND_COMPONENTS;
 use futures::future::join_all;
 use serde::Deserialize;
-use serde_json::{from_value, json};
+use serde_json::from_value;
 use std::{
     collections::BTreeMap,
     fmt,
@@ -22,7 +22,7 @@ pub use bevy_ecs::entity::Entity;
 pub use bevy_remote::schemas::json_schema::{JsonSchemaBevyType, SchemaKind, SchemaType};
 pub use entity_item::EntityItem;
 pub use entity_kind::EntityKind;
-pub use serde_json::Value;
+pub use serde_json::{Value, json};
 
 #[derive(Debug, Error)]
 pub enum ClientError {

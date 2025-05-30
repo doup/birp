@@ -1,4 +1,4 @@
-mod component_inspector;
+mod component;
 mod connection;
 mod entities_tool;
 mod entity_inspector;
@@ -9,7 +9,7 @@ mod resource_inspector;
 mod resources_tool;
 mod types_tool;
 
-pub use component_inspector::*;
+pub use component::*;
 pub use connection::*;
 pub use entities_tool::*;
 pub use entity_inspector::*;

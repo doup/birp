@@ -5,6 +5,7 @@ use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitEx
 use components::{Connection, EntitiesTool, Icon, ResourcesTool, TypesTool};
 use states::{ConnectionState, EntitiesToolState, ResourcesToolState, TypesToolState};
 
+mod bevy_type;
 mod components;
 mod states;
 mod utils;

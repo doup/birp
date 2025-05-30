@@ -1,17 +1,46 @@
-use client::{Value, component};
-use dioxus::prelude::*;
+use client::{Entity, Value, component};
+use dioxus::{logger::tracing::info, prelude::*};
 
-use crate::{components::JsonValue, states::ConnectionState, utils::get_short_type_name};
+use crate::{
+    components::{ComponentValue, Icon},
+    states::ConnectionState,
+    utils::get_short_type_name,
+};
+
+#[derive(Debug)]
+pub struct MutateData {
+    /// Component type path, e.g. `bevy_ui::ui_node::Node`
+    type_path: String,
+    /// Path to the field in the component, e.g. `.align_content`
+    path: String,
+    value: Value,
+}
+
+impl MutateData {
+    pub fn new(
+        type_path: impl Into<String>,
+        path: impl Into<String>,
+        value: impl Into<Value>,
+    ) -> Self {
+        Self {
+            type_path: type_path.into(),
+            path: path.into(),
+            value: value.into(),
+        }
+    }
+}
 
 #[component]
-pub fn ComponentInspector(type_path: String, value: Option<Value>) -> Element {
+pub fn ComponentInspector(id: Entity, type_path: String, value: Option<Value>) -> Element {
+    let client = use_context::<ConnectionState>().client;
     let schema = use_context::<ConnectionState>().schema;
     let mut is_open = use_signal(|| {
-        !vec![
+        ![
             component::COMPUTED_NODE_TARGET,
             component::COMPUTED_NODE,
             component::COMPUTED_TEXT_BLOCK,
             component::GLOBAL_TRANSFORM,
+            component::LIGHT_CASCADES,
         ]
         .contains(&type_path.as_str())
     });
@@ -27,7 +56,15 @@ pub fn ComponentInspector(type_path: String, value: Option<Value>) -> Element {
     });
     let bevy_type = use_memo({
         let type_path = type_path.clone();
-        move || schema().get(&type_path.clone()).cloned()
+        move || schema().get(&type_path).cloned()
+    });
+    let mutate_cb = use_callback(move |data: MutateData| {
+        info!("MutateData: {data:?}");
+        spawn(async move {
+            let _ = client()
+                .mutate_component(id, data.type_path, data.path, data.value)
+                .await;
+        });
     });
 
     rsx! {
@@ -44,11 +81,15 @@ pub fn ComponentInspector(type_path: String, value: Option<Value>) -> Element {
                 if is_open() {
                     {
                         match bevy_type() {
-                            Some(_bevy_type) => {
+                            Some(bevy_type) => {
                                 if let Some(value) = value {
                                     rsx! {
-                                        // div { style: "font-size: 10px;", "{bevy_type.schema_type:?} {bevy_type.kind:?}" }
-                                        JsonValue { value }
+                                        ComponentValue {
+                                            value: value.clone(),
+                                            component_type: bevy_type.type_path.clone(),
+                                            bevy_type: bevy_type.clone(),
+                                            mutate_cb,
+                                        }
                                     }
                                 } else {
                                     rsx! {

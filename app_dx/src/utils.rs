@@ -1,3 +1,5 @@
+use client::Value;
+
 pub fn add_zero_width_spaces(value: &str) -> String {
     let mut formatted = String::with_capacity(value.len());
     let chars = value.chars();
@@ -55,6 +57,20 @@ pub fn get_short_type_name(full_path: &str) -> String {
             process_generic_part(type_name, generic_part)
         }
     }
+}
+
+pub fn get_type_path_from_ref_value(value: &Value) -> Option<String> {
+    value
+        .as_object()
+        .and_then(|obj| obj.get("type"))
+        .and_then(|type_val| type_val.as_object())
+        .and_then(|type_obj| type_obj.get("$ref"))
+        .and_then(|ref_val| ref_val.as_str())
+        .and_then(|ref_str| {
+            ref_str
+                .strip_prefix("#/$defs/")
+                .map(|path| path.to_string())
+        })
 }
 
 fn process_generic_part(type_name: &str, generic_part: &str) -> String {
@@ -121,4 +137,11 @@ fn split_top_level_args(text: &str) -> Vec<&str> {
     }
 
     result
+}
+
+pub fn value_to_string(value: &Value) -> String {
+    value
+        .as_str()
+        .map(|s| s.to_string())
+        .unwrap_or_else(|| value.to_string())
 }
