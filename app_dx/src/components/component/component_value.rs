@@ -11,7 +11,7 @@ use crate::{
         },
     },
     states::ConnectionState,
-    utils::{get_object_path, get_type_path_from_ref_value, value_to_string},
+    utils::{get_array_path, get_object_path, get_type_path_from_ref_value, value_to_string},
 };
 
 use super::{MutateData, map_value::map_value};
@@ -94,9 +94,66 @@ pub fn ComponentValue(
                     onchange: move |value| mutate_cb.call(MutateData::new(&component_type, path(), value)),
                 }
             },
-            // (SchemaType::Array, SchemaKind::TupleStruct) => rsx! {
-            //     for item in bevy_type.prefix_items.iter() {
-            //         "{item:?}"
+            (SchemaType::Array, SchemaKind::List) => {
+                let value = value.as_array().cloned().unwrap_or_else(Vec::new);
+                let type_ref = bevy_type.items.unwrap();
+                let bevy_type = get_type_path_from_ref_value(&type_ref)
+                    .and_then(|type_path| schema().get(&type_path).cloned());
+
+                match bevy_type {
+                    Some(bevy_type) => rsx! {
+                        table { class: "json-value-table json-value-table--array",
+                            if value.is_empty() {
+                                div { class: "json-value-empty", "Empty Array" }
+                            } else {
+                                for (idx , item) in value.iter().enumerate() {
+                                    {
+                                        let item_path = get_array_path(&parent_path, idx.to_string().as_str());
+                                        rsx! {
+                                            tr {
+                                                th { title: "{item_path}", "⚬" }
+                                                td {
+                                                    ComponentValue {
+                                                        value: item.clone(),
+                                                        component_type: component_type.clone(),
+                                                        bevy_type: bevy_type.clone(),
+                                                        mutate_cb,
+                                                        parent_path: item_path.clone(),
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    None => rsx! {
+                        div { class: "issue", "Type not found: {type_ref:?}" }
+                    },
+                }
+            }
+            (SchemaType::Array, SchemaKind::TupleStruct) => {
+                let type_ref = bevy_type.prefix_items.first().unwrap();
+                let parent_path = get_object_path(&parent_path, "0");
+                let bevy_type = get_type_path_from_ref_value(type_ref)
+                    .and_then(|type_path| schema().get(&type_path).cloned());
+
+                match bevy_type {
+                    Some(bevy_type) => rsx! {
+                        ComponentValue {
+                            value,
+                            component_type,
+                            bevy_type,
+                            mutate_cb,
+                            parent_path,
+                        }
+                    },
+                    None => rsx! {
+                        div { class: "issue", "Type not found: {type_ref:?}" }
+                    },
+                }
+            }
             //     }
             // },
             (SchemaType::Object, SchemaKind::Struct) => {
