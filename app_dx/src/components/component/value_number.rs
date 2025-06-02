@@ -12,6 +12,7 @@ pub fn ValueNumber(value: String, onchange: EventHandler<f64>, schema_type: Sche
 
     rsx! {
         input {
+            class: "value-number",
             r#type: "number",
             value,
             min: min_attr,
