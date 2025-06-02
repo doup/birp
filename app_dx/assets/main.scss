@@ -735,6 +735,25 @@ html {
   }
 }
 
+.value-entity {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 4px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--color-neutral-20);
+  }
+
+  .icon {
+    opacity: 0.5;
+  }
+}
+
 .value-select {
   display: block;
   width: 100%;

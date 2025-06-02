@@ -1,12 +1,13 @@
-use client::{JsonSchemaBevyType, SchemaKind, SchemaType, Value, component};
+use client::{Entity, JsonSchemaBevyType, SchemaKind, SchemaType, Value, component, from_value};
 use dioxus::prelude::*;
 
 use crate::{
+    bevy_type,
     components::{
         JsonValue,
         component::{
-            value_bool::ValueBool, value_number::ValueNumber, value_select::ValueSelect,
-            value_string::ValueString,
+            value_bool::ValueBool, value_entity::ValueEntity, value_number::ValueNumber,
+            value_select::ValueSelect, value_string::ValueString,
         },
     },
     states::ConnectionState,
@@ -43,9 +44,18 @@ pub fn ComponentValue(
     }
 
     match bevy_type.type_path.as_str() {
-        // bevy_type::ENTITY => {
-        //     rsx! { "Entity {value:?}" }
-        // }
+        bevy_type::ENTITY => {
+            let entity = from_value::<Entity>(value);
+
+            match entity {
+                Ok(entity) => rsx! {
+                    ValueEntity { entity }
+                },
+                _ => rsx! {
+                    div { class: "issue", "Invalid entity" }
+                },
+            }
+        }
         component::NAME => rsx! {
             ValueString {
                 value: value_to_string(&value),
