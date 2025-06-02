@@ -15,7 +15,16 @@ pub fn map_value(bevy_type: &str, value: Value) -> Value {
                 value
             }
         }
-        bevy_type::GLAM_VEC3 => {
+        bevy_type::GLAM_VEC2 => {
+            if let Some(arr) = value.as_array() {
+                let x = arr.first().and_then(Value::as_f64).unwrap_or(0.0);
+                let y = arr.get(1).and_then(Value::as_f64).unwrap_or(0.0);
+                json!({ "x": x, "y": y })
+            } else {
+                value
+            }
+        }
+        bevy_type::GLAM_VEC3 | bevy_type::GLAM_VEC3A => {
             if let Some(arr) = value.as_array() {
                 let x = arr.first().and_then(Value::as_f64).unwrap_or(0.0);
                 let y = arr.get(1).and_then(Value::as_f64).unwrap_or(0.0);
