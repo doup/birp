@@ -19,4 +19,5 @@ pub const POINTER_ID: &str = "bevy_picking::pointer::PointerId";
 pub const POINTER_PRESS: &str = "bevy_picking::pointer::PointerPress";
 pub const SYSTEM_ID_MARKER: &str = "bevy_ecs::system::system_registry::SystemIdMarker";
 pub const TEXT: &str = "bevy_ui::widget::text::Text";
+pub const TEXT_LAYOUT_INFO: &str = "bevy_text::pipeline::TextLayoutInfo";
 pub const WINDOW: &str = "bevy_window::window::Window";

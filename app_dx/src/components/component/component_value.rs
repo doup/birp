@@ -33,6 +33,7 @@ pub fn ComponentValue(
         component::GLOBAL_TRANSFORM,
         component::POINTER_PRESS,
         component::MONITOR,
+        component::TEXT_LAYOUT_INFO,
     ];
 
     if read_only.contains(&bevy_type.type_path.as_str()) {

@@ -41,6 +41,7 @@ pub fn ComponentInspector(id: Entity, type_path: String, value: Option<Value>) -
             component::COMPUTED_TEXT_BLOCK,
             component::GLOBAL_TRANSFORM,
             component::LIGHT_CASCADES,
+            component::TEXT_LAYOUT_INFO,
         ]
         .contains(&type_path.as_str())
     });
