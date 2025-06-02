@@ -703,6 +703,43 @@ html {
   margin-left: 2px;
 }
 
+.options {
+  display: flex;
+  gap: 2px;
+  width: calc(100% - 8px);
+
+  margin: 4px;
+  border: 1px solid var(--color-neutral-25);
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 11px;
+
+  &__item {
+    flex: 1 0 auto;
+    border-radius: 2px;
+    padding: 4px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--color-neutral-60);
+
+    &:hover {
+      background-color: rgba(#fff, 0.04);
+      color: var(--color-neutral-80);
+    }
+
+    &--selected {
+      background-color: rgba(#fff, 0.1) !important;
+      color: var(--color-neutral-90) !important;
+    }
+  }
+}
+
+.value-select {
+  display: block;
+  width: 100%;
+  font-size: 12px;
+}
+
 .json-value {
   display: inline-block;
   font-family: var(--font-mono);

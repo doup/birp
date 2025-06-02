@@ -4,7 +4,10 @@ use dioxus::prelude::*;
 use crate::{
     components::{
         JsonValue,
-        component::{value_bool::ValueBool, value_number::ValueNumber, value_string::ValueString},
+        component::{
+            value_bool::ValueBool, value_number::ValueNumber, value_select::ValueSelect,
+            value_string::ValueString,
+        },
     },
     states::ConnectionState,
     utils::{get_object_path, get_type_path_from_ref_value, value_to_string},
@@ -73,25 +76,13 @@ pub fn ComponentValue(
                     onchange: move |value| mutate_cb.call(MutateData::new(&component_type, path(), value)),
                 }
             },
-            (SchemaType::String, SchemaKind::Enum) => {
-                let current = value_to_string(&value);
-                let options: Vec<String> = bevy_type.one_of.iter().map(value_to_string).collect();
-
-                rsx! {
-                    select {
-                        onchange: move |e| {
-                            mutate_cb.call(MutateData::new(&component_type, path(), e.value()));
-                        },
-                        for option_value in options {
-                            option {
-                                value: "{option_value}",
-                                selected: option_value == current,
-                                "{option_value}"
-                            }
-                        }
-                    }
+            (SchemaType::String, SchemaKind::Enum) => rsx! {
+                ValueSelect {
+                    value: value_to_string(&value),
+                    options: bevy_type.one_of.iter().map(value_to_string).collect(),
+                    onchange: move |value| mutate_cb.call(MutateData::new(&component_type, path(), value)),
                 }
-            }
+            },
             // (SchemaType::Array, SchemaKind::TupleStruct) => rsx! {
             //     for item in bevy_type.prefix_items.iter() {
             //         "{item:?}"
@@ -123,7 +114,7 @@ pub fn ComponentValue(
                                         let value = value.as_object().and_then(|obj| obj.get(key));
                                         rsx! {
                                             div { key, class: "json-value-key-list__item",
-                                                div { class: "json-value-key-list__key", "{key}!!!!" }
+                                                div { class: "json-value-key-list__key", "{key}" }
                                                 div { class: "json-value-key-list__value",
                                                     {
                                                         match value {
