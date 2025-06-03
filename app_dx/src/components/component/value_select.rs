@@ -12,16 +12,17 @@ pub fn ValueSelect(value: String, options: Vec<String>, onchange: EventHandler<S
 
     rsx! {
         if options.len() > 3 {
-            select {
-                class: "value-select",
-                onchange: move |e| {
-                    onchange.call(e.value());
-                },
-                for option_value in options {
-                    option {
-                        value: "{option_value}",
-                        selected: option_value == value,
-                        "{option_value}"
+            div { class: "select",
+                select {
+                    onchange: move |e| {
+                        onchange.call(e.value());
+                    },
+                    for option_value in options {
+                        option {
+                            value: "{option_value}",
+                            selected: option_value == value,
+                            "{option_value}"
+                        }
                     }
                 }
             }
