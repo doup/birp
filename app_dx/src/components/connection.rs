@@ -99,7 +99,7 @@ pub fn Connection() -> Element {
                 input {
                     class: "polling__range",
                     r#type: "range",
-                    value: "2",
+                    value: "1",
                     min: "0",
                     max: "4",
                     oninput: move |e| {

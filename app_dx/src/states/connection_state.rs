@@ -19,7 +19,7 @@ impl ConnectionState {
     pub fn new(url: impl Into<String>) -> Self {
         let automatic_poll = Signal::new(true);
         let is_connected = Signal::new(false);
-        let poll_interval = Signal::new(500_u64);
+        let poll_interval = Signal::new(250_u64);
         let schema = Signal::new(BTreeMap::new());
         let update_signal = Signal::new(());
         let url = Signal::new(url.into());
