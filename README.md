@@ -2,7 +2,7 @@
 
 <div align="center">
   <h3 align="center">BiRP</h3>
-  <p align="center"><em>a <strong>read-only</strong> <a href="https://bevyengine.org" target="_blank">Bevy 0.16</a> remote protocol (BRP) inspector built using <a href="https://dioxuslabs.com" target="_blank">Dioxus</a></em></p>
+  <p align="center"><em>a <a href="https://bevyengine.org" target="_blank">Bevy 0.16</a> remote protocol (BRP) inspector with *limited* editing capabilities built using <a href="https://dioxuslabs.com" target="_blank">Dioxus</a></em></p>
 </div>
 
 ## Build BiRP
