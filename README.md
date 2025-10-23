@@ -2,7 +2,7 @@
 
 <div align="center">
   <h3 align="center">BiRP</h3>
-  <p align="center"><em>a <a href="https://bevyengine.org" target="_blank">Bevy 0.16</a> remote protocol (BRP) inspector with *limited* editing capabilities built using <a href="https://dioxuslabs.com" target="_blank">Dioxus</a></em></p>
+  <p align="center"><em>a <a href="https://bevy.org" target="_blank">Bevy 0.17</a> remote protocol (BRP) inspector with *limited* editing capabilities built using <a href="https://dioxuslabs.com" target="_blank">Dioxus</a></em></p>
 </div>
 
 ## Build BiRP
@@ -20,7 +20,7 @@ To enable the [Bevy Remote Protocol (BRP)](https://github.com/bevyengine/bevy/bl
 
 ```toml
 [dependencies]
-bevy = { version = "0.16", features = ["bevy_remote"] }
+bevy = { version = "0.17", features = ["bevy_remote"] }
 ```
 
 Then add the following plugins to your game/app:
@@ -35,6 +35,13 @@ fn main() {
         .run();
 }
 ```
+
+## Versions
+
+|                | Bevy version |
+| -------------- | ------------ |
+| Branch: `main` | 0.17         |
+| Tag: `v0.16`   | 0.16         |
 
 ## Development
 
