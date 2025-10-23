@@ -29,8 +29,13 @@ jobs:
           prefix-key: v0-rust
           cache-targets: true
 
+      - name: Install cargo-binstall
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
+
       - name: Install Dioxus CLI
-        run: cargo install dioxus-cli --version 0.6.3 --locked
+        run: cargo binstall dioxus-cli@0.6.3 --no-confirm --force
 
       - name: Build web bundle
         working-directory: app_dx
