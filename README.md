@@ -48,5 +48,5 @@ fn main() {
 To start the dev server, run:
 
 ```sh
-dx serve -p app_dx
+dx serve -p app_dx --platform desktop
 ```

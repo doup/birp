@@ -1,6 +1,10 @@
-use dioxus::desktop::{Config, LogicalSize, WindowBuilder};
 use dioxus::prelude::*;
+
+#[cfg(not(target_arch = "wasm32"))]
 use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
+
+#[cfg(not(target_arch = "wasm32"))]
+use dioxus::desktop::{Config, LogicalSize, WindowBuilder};
 
 use components::{Connection, EntitiesTool, Icon, ResourcesTool, TypesTool};
 use states::{ConnectionState, EntitiesToolState, ResourcesToolState, TypesToolState};
@@ -10,6 +14,7 @@ mod components;
 mod states;
 mod utils;
 
+#[cfg(not(target_arch = "wasm32"))]
 fn main() {
     // Initialize tracing with filter
     tracing_subscriber::registry()
@@ -31,6 +36,11 @@ fn main() {
             ),
         )
         .launch(App)
+}
+
+#[cfg(target_arch = "wasm32")]
+fn main() {
+    dioxus::launch(App);
 }
 
 #[derive(PartialEq)]

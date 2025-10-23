@@ -1,4 +1,24 @@
 use client::Value;
+use std::time::Duration;
+
+#[cfg(target_arch = "wasm32")]
+use gloo_timers::future::TimeoutFuture;
+#[cfg(not(target_arch = "wasm32"))]
+use tokio::time;
+
+/// Cross-platform sleep helper so wasm builds avoid std::time::Instant.
+pub async fn sleep(duration: Duration) {
+    #[cfg(target_arch = "wasm32")]
+    {
+        let millis = duration.as_millis().clamp(0, u32::MAX as u128) as u32;
+        TimeoutFuture::new(millis).await;
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        time::sleep(duration).await;
+    }
+}
 
 pub fn add_zero_width_spaces(value: &str) -> String {
     let mut formatted = String::with_capacity(value.len());

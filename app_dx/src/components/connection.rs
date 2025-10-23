@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use std::time::Duration;
 
-use crate::{components::Icon, states::ConnectionState};
+use crate::{components::Icon, states::ConnectionState, utils::sleep};
 
 #[component]
 pub fn Connection() -> Element {
@@ -52,7 +52,7 @@ pub fn Connection() -> Element {
                 is_connected.set(new_is_connected);
             }
 
-            tokio::time::sleep(Duration::from_millis(1000)).await;
+            sleep(Duration::from_millis(1000)).await;
         }
     });
 
@@ -63,7 +63,7 @@ pub fn Connection() -> Element {
                 update_signal.set(());
             }
 
-            tokio::time::sleep(Duration::from_millis(poll_interval())).await;
+            sleep(Duration::from_millis(poll_interval())).await;
         }
     });
 
