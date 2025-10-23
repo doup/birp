@@ -922,6 +922,10 @@ select[disabled],
     font-size: 12px;
     font-weight: var(--weight-light);
     border-radius: var(--border-radius) var(--border-radius) 0 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__value {
