@@ -1,0 +1,21 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Deploy Dioxus app to GitHub Pages
+        uses: DioxusLabs/deploy-action@0.1.2
+        with:
+          buildMode: release
+          toolchain: stable
+          outDirectory: dist/public
+          rootPath: app_dx
