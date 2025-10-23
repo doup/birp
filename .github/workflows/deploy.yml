@@ -41,7 +41,6 @@ jobs:
         working-directory: app_dx
         run: |
           dx build --release --platform web
-          cp dist/public/index.html dist/public/404.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.4.1
