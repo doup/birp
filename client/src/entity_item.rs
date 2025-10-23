@@ -1,6 +1,6 @@
 use bevy_ecs::entity::Entity;
 use bevy_remote::{
-    builtin_methods::{BrpGetResponse, BrpQueryRow},
+    builtin_methods::{BrpGetComponentsResponse, BrpQueryRow},
     error_codes::COMPONENT_ERROR,
 };
 use serde_json::Value;
@@ -37,11 +37,11 @@ impl EntityItem {
     }
 }
 
-impl From<(Entity, BrpGetResponse)> for EntityItem {
-    fn from(from: (Entity, BrpGetResponse)) -> Self {
+impl From<(Entity, BrpGetComponentsResponse)> for EntityItem {
+    fn from(from: (Entity, BrpGetComponentsResponse)) -> Self {
         let mut empty_components = vec![];
         let components = match from.1 {
-            BrpGetResponse::Lenient { components, errors } => {
+            BrpGetComponentsResponse::Lenient { components, errors } => {
                 // Some errors happen when the component is not
                 // reflectable/serializable. We still want to list them.
                 for (component, value) in errors.iter() {
@@ -59,7 +59,7 @@ impl From<(Entity, BrpGetResponse)> for EntityItem {
 
                 components
             }
-            BrpGetResponse::Strict(components) => components,
+            BrpGetComponentsResponse::Strict(components) => components,
         };
 
         let mut components: BTreeMap<String, Option<Value>> = components

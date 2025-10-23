@@ -28,12 +28,12 @@ pub fn ComponentValue(
     let value = map_value(&bevy_type.type_path, value);
     let path = use_signal(|| parent_path.clone().unwrap_or_default());
     let read_only = [
-        component::COMPUTED_NODE_TARGET,
         component::COMPUTED_NODE,
         component::COMPUTED_TEXT_BLOCK,
+        component::COMPUTED_UI_TARGET_CAMERA,
         component::GLOBAL_TRANSFORM,
-        component::POINTER_PRESS,
         component::MONITOR,
+        component::POINTER_PRESS,
         component::TEXT_LAYOUT_INFO,
     ];
 
@@ -182,7 +182,7 @@ pub fn ComponentValue(
                                         let value = value.as_object().and_then(|obj| obj.get(key));
                                         rsx! {
                                             div { key, class: "json-value-key-list__item",
-                                                div { class: "json-value-key-list__key", "{key}" }
+                                                div { class: "json-value-key-list__key", alt: "{key}", "{key}" }
                                                 div { class: "json-value-key-list__value",
                                                     {
                                                         match value {

@@ -36,9 +36,9 @@ pub fn ComponentInspector(id: Entity, type_path: String, value: Option<Value>) -
     let schema = use_context::<ConnectionState>().schema;
     let mut is_open = use_signal(|| {
         ![
-            component::COMPUTED_NODE_TARGET,
             component::COMPUTED_NODE,
             component::COMPUTED_TEXT_BLOCK,
+            component::COMPUTED_UI_TARGET_CAMERA,
             component::GLOBAL_TRANSFORM,
             component::LIGHT_CASCADES,
             component::TEXT_LAYOUT_INFO,

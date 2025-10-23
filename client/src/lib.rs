@@ -1,4 +1,4 @@
-use bevy_remote::builtin_methods::{BrpGetResponse, BrpQueryRow};
+use bevy_remote::builtin_methods::{BrpGetComponentsResponse, BrpQueryRow};
 use entity_kind::KIND_COMPONENTS;
 use futures::future::join_all;
 use serde::Deserialize;
@@ -111,12 +111,12 @@ impl BrpClient {
 
     pub async fn get(&self, id: Entity) -> Result<EntityItem, ClientError> {
         let components = self
-            .call("bevy/list", Some(json!({ "entity": id })))
+            .call("world.list_components", Some(json!({ "entity": id })))
             .await?;
 
         let entity = self
             .call(
-                "bevy/get",
+                "world.get_components",
                 Some(json!({
                     "entity": id,
                     "components": components
@@ -124,19 +124,48 @@ impl BrpClient {
             )
             .await?;
 
-        Ok((id, from_value::<BrpGetResponse>(entity)?).into())
+        Ok((id, from_value::<BrpGetComponentsResponse>(entity)?).into())
+    }
+
+    pub async fn get_many(&self, ids: Vec<Entity>) -> Result<Vec<EntityItem>, ClientError> {
+        let components = {
+            let mut components = vec![component::NAME, component::CHILDREN, component::CHILD_OF];
+            components.extend_from_slice(&KIND_COMPONENTS);
+            components
+        };
+
+        let futures = ids
+            .into_iter()
+            .map(async |id| -> Result<EntityItem, ClientError> {
+                let entity = self
+                    .call(
+                        "world.get_components",
+                        Some(json!({
+                            "entity": id,
+                            "components": components
+                        })),
+                    )
+                    .await?;
+
+                Ok((id, from_value::<BrpGetComponentsResponse>(entity)?).into())
+            });
+
+        // Wait for all futures to complete
+        let results = join_all(futures).await;
+
+        results.into_iter().collect()
     }
 
     pub async fn get_children(
         &self,
         parent_id: Option<Entity>,
     ) -> Result<Vec<EntityItem>, ClientError> {
-        match parent_id {
+        let entities = match parent_id {
             Some(id) => {
                 // Get the parent entity so we can get its children IDs
                 let parent = self
                     .call(
-                        "bevy/get",
+                        "world.get_components",
                         Some(json!({
                             "entity": id,
                             "components": [component::CHILDREN]
@@ -144,52 +173,17 @@ impl BrpClient {
                     )
                     .await?;
 
-                let parent: EntityItem = (id, from_value::<BrpGetResponse>(parent)?).into();
+                let parent: EntityItem =
+                    (id, from_value::<BrpGetComponentsResponse>(parent)?).into();
 
-                // Fetch all the children
-                let components = {
-                    let mut components =
-                        vec![component::NAME, component::CHILDREN, component::CHILD_OF];
-                    components.extend_from_slice(&KIND_COMPONENTS);
-                    components
-                };
-                let futures = parent.children().into_iter().map(
-                    async |id| -> Result<EntityItem, ClientError> {
-                        let entity = self
-                            .call(
-                                "bevy/get",
-                                Some(json!({
-                                    "entity": id,
-                                    "components": components
-                                })),
-                            )
-                            .await?;
-
-                        Ok((id, from_value::<BrpGetResponse>(entity)?).into())
-                    },
-                );
-
-                // Wait for all futures to complete
-                let results = join_all(futures).await;
-
-                // Collect the results into a single `Result`
-                let entities: Result<Vec<EntityItem>, ClientError> = results.into_iter().collect();
-
-                entities
+                parent.children()
             }
             None => {
                 let res = self
                     .call(
-                        "bevy/query",
+                        "world.query",
                         Some(json!({
-                            "data": {
-                                "option": [
-                                    component::NAME,
-                                    component::CHILDREN,
-                                    component::CHILD_OF,
-                                ],
-                                "has": KIND_COMPONENTS,
-                            },
+                            "data": {},
                             "filter": {
                                 "without": [component::CHILD_OF]
                             },
@@ -199,15 +193,17 @@ impl BrpClient {
 
                 let res = from_value::<Vec<BrpQueryRow>>(res)?;
 
-                Ok(res.into_iter().map(Into::into).collect())
+                res.into_iter().map(|row| row.entity).collect()
             }
-        }
+        };
+
+        self.get_many(entities).await
     }
 
     pub async fn get_resource(&self, resource: String) -> Result<Value, ClientError> {
         let res = self
             .call(
-                "bevy/get_resource",
+                "world.get_resources",
                 Some(json!({
                     "resource": resource,
                 })),
@@ -218,13 +214,13 @@ impl BrpClient {
     }
 
     pub async fn get_schema(&self) -> Result<BTreeMap<String, JsonSchemaBevyType>, ClientError> {
-        let res = self.call("bevy/registry/schema", None).await?;
+        let res = self.call("registry.schema", None).await?;
         let schema = from_value::<BTreeMap<String, JsonSchemaBevyType>>(res)?;
         Ok(schema)
     }
 
     pub async fn list_resources(&self) -> Result<Vec<String>, ClientError> {
-        let res = self.call("bevy/list_resources", None).await?;
+        let res = self.call("world.list_resources", None).await?;
         let resources = from_value::<Vec<String>>(res)?;
         Ok(resources)
     }
@@ -237,7 +233,7 @@ impl BrpClient {
         value: Value,
     ) -> Result<(), ClientError> {
         self.call(
-            "bevy/mutate_component",
+            "world.mutate_components",
             Some(json!({
                 "entity": id,
                 "component": component,
