@@ -17,9 +17,9 @@
   font-weight: 100 900;
   font-style: normal;
   src: local("Firava"),
-    url("/assets/fonts/firava-sans.woff2") format("woff2 supports variations"),
-    url("/assets/fonts/firava-sans.woff2") format("woff2-variations"),
-    url("/assets/fonts/firava-sans.ttf") format("truetype-variation");
+    url("./fonts/firava-sans.woff2") format("woff2 supports variations"),
+    url("./fonts/firava-sans.woff2") format("woff2-variations"),
+    url("./fonts/firava-sans.ttf") format("truetype-variation");
 }
 
 @font-face {
@@ -28,10 +28,9 @@
   font-weight: 100 900;
   font-style: italic;
   src: local("Firava Italic"),
-    url("/assets/fonts/firava-sans-italic.woff2")
-      format("woff2 supports variations"),
-    url("/assets/fonts/firava-sans-italic.woff2") format("woff2-variations"),
-    url("/assets/fonts/firava-sans-italic.ttf") format("truetype-variation");
+    url("./fonts/firava-sans-italic.woff2") format("woff2 supports variations"),
+    url("./fonts/firava-sans-italic.woff2") format("woff2-variations"),
+    url("./fonts/firava-sans-italic.ttf") format("truetype-variation");
 }
 
 * {

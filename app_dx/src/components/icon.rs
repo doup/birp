@@ -60,7 +60,7 @@ impl Icon {
         rsx! {
             i {
                 class: "icon",
-                style: "--icon-url: url(\"/assets/icons/{file_name}.svg\"); --icon-ratio: {ratio};",
+                style: "--icon-url: url(\"./assets/icons/{file_name}.svg\"); --icon-ratio: {ratio};",
             }
         }
     }
@@ -71,7 +71,7 @@ impl Icon {
         rsx! {
             i {
                 class: "icon {class}",
-                style: "--icon-url: url(\"/assets/icons/{file_name}.svg\"); --icon-ratio: {ratio};",
+                style: "--icon-url: url(\"./assets/icons/{file_name}.svg\"); --icon-ratio: {ratio};",
             }
         }
     }

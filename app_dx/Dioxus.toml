@@ -22,6 +22,8 @@ publisher = "Gutxi"
 
 # HTML title tag content
 title = "BiRP"
+# Base path for: https://doup.github.io/birp/
+base_path = "birp"
 
 [web.watcher]
 
