@@ -67,6 +67,8 @@ fn App() -> Element {
     };
 
     rsx! {
+        document::Link { rel: "icon", href: asset!("/assets/favicon.png") }
+        document::Title { "BiRP · A Bevy remote protocol (BRP) inspector" }
         document::Stylesheet { href: asset!("/assets/main.scss") }
 
         div { class: "layout",
