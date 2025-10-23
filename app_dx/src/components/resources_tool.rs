@@ -41,6 +41,7 @@ pub fn ResourcesTool() -> Element {
                 div { class: "item-tree item-tree--root item-tree--flat",
                     for res in resources.iter() {
                         div {
+                            key: res,
                             class: format!(
                                 "item-tree__item {}",
                                 if active().as_ref() == Some(&res) { "item-tree__item--active" } else { "" },

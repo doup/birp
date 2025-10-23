@@ -103,7 +103,11 @@ pub fn EntityInspector(id: ReadOnlySignal<Entity>, is_pinned: bool) -> Element {
                 if !marker_components().is_empty() {
                     div { class: "marker-components",
                         for component in marker_components() {
-                            div { class: "marker-components__item", {get_short_type_name(&component)} }
+                            div {
+                                key: component,
+                                class: "marker-components__item",
+                                {get_short_type_name(&component)}
+                            }
                         }
                     }
                 }
