@@ -40,7 +40,7 @@ jobs:
       - name: Build web bundle
         working-directory: app_dx
         run: |
-          dx build --release --platform web
+          dx bundle --release --platform web
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.4.1
