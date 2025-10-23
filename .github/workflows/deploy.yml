@@ -12,10 +12,35 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Deploy Dioxus app to GitHub Pages
-        uses: DioxusLabs/deploy-action@0.1.2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1.0.6
         with:
-          buildMode: release
           toolchain: stable
-          outDirectory: dist/public
-          rootPath: app_dx
+          profile: minimal
+          target: wasm32-unknown-unknown
+          override: true
+
+      - name: Cache cargo artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: v0-rust
+          cache-targets: true
+
+      - name: Install Dioxus CLI
+        run: cargo install dioxus-cli --version 0.6.3 --locked
+
+      - name: Build web bundle
+        working-directory: app_dx
+        run: |
+          dx build --release --platform web
+          cp dist/public/index.html dist/public/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        with:
+          branch: gh-pages
+          folder: app_dx/dist/public
+          clean: false
